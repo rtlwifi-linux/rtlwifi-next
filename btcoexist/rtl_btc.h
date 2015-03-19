@@ -47,6 +47,7 @@ void rtl_btc_record_pwr_mode(struct rtl_priv *rtlpriv, u8 *buf, u8 len);
 u8   rtl_btc_get_lps_val(struct rtl_priv *rtlpriv);
 u8   rtl_btc_get_rpwm_val(struct rtl_priv *rtlpriv);
 bool rtl_btc_is_bt_ctrl_lps(struct rtl_priv *rtlpriv);
+bool rtl_btc_is_bt_lps_on(struct rtl_priv *rtlpriv);
 
 struct rtl_btc_ops *rtl_btc_get_ops_pointer(void);
 
