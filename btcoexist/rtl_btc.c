@@ -41,6 +41,7 @@ static struct rtl_btc_ops rtl_btc_operation = {
 	.btc_periodical = rtl_btc_periodical,
 	.btc_halt_notify = rtl_btc_halt_notify,
 	.btc_btinfo_notify = rtl_btc_btinfo_notify,
+	.btc_btmpinfo_notify = rtl_btc_btmpinfo_notify,
 	.btc_is_limited_dig = rtl_btc_is_limited_dig,
 	.btc_is_disable_edca_turbo = rtl_btc_is_disable_edca_turbo,
 	.btc_is_bt_disabled = rtl_btc_is_bt_disabled,
@@ -155,6 +156,10 @@ void rtl_btc_halt_notify(void)
 void rtl_btc_btinfo_notify(struct rtl_priv *rtlpriv, u8 *tmp_buf, u8 length)
 {
 	exhalbtc_bt_info_notify(&gl_bt_coexist, tmp_buf, length);
+}
+
+void rtl_btc_btmpinfo_notify(struct rtl_priv *rtlpriv, u8 *tmp_buf, u8 length)
+{
 }
 
 bool rtl_btc_is_limited_dig(struct rtl_priv *rtlpriv)
