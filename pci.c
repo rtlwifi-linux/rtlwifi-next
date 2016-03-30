@@ -2079,11 +2079,17 @@ static bool _rtl_pci_find_adapter(struct pci_dev *pdev,
 		}
 	}
 
-	/* 92ee use new trx flow */
-	if (rtlhal->hw_type == HARDWARE_TYPE_RTL8192EE)
+	switch (rtlhal->hw_type) {
+	case HARDWARE_TYPE_RTL8192EE:
+	case HARDWARE_TYPE_RTL8822BE:
+		/* use new trx flow */
 		rtlpriv->use_new_trx_flow = true;
-	else
+		break;
+
+	default:
 		rtlpriv->use_new_trx_flow = false;
+		break;
+	}
 
 	/*find bus info */
 	pcipriv->ndis_adapter.busnumber = pdev->bus->number;
