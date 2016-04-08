@@ -1181,6 +1181,8 @@ static void _rtl_pci_init_trx_var(struct ieee80211_hw *hw)
 
 	if (rtlhal->hw_type == HARDWARE_TYPE_RTL8192EE)
 		desc_num = TX_DESC_NUM_92E;
+	else if (rtlhal->hw_type == HARDWARE_TYPE_RTL8822BE)
+		desc_num = TX_DESC_NUM_8822B;
 	else
 		desc_num = RT_TXDESC_NUM;
 
