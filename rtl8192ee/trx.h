@@ -342,6 +342,8 @@
 	SET_BITS_TO_LE_4BYTE(__pdesc+(__offset*16)+8, 0, 32, __val)
 #define GET_TXBUFFER_DESC_ADDR_LOW(__pdesc, __offset)			\
 	LE_BITS_TO_4BYTE(__pdesc+(__offset*16)+4, 0, 32)
+#define GET_TXBUFFER_DESC_ADDR_HIGH(__pdesc, __offset)			\
+	LE_BITS_TO_4BYTE(__pdesc+(__offset*16)+8, 0, 32)
 #else
 #define SET_TXBUFFER_DESC_LEN_WITH_OFFSET(__pdesc, __offset, __val)	\
 	SET_BITS_TO_LE_4BYTE(__pdesc+(__offset*8), 0, 16, __val)
