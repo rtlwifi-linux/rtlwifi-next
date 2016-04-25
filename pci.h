@@ -157,7 +157,7 @@ struct rtl_tx_desc {
 } __packed;
 
 struct rtl_rx_buffer_desc { /*rx buffer desc*/
-	u32 dword[2];
+	u32 dword[(DMA_IS_64BIT + 1)*2];
 } __packed;
 
 struct rtl_rx_desc { /*old: rx desc new: rx wifi info*/
