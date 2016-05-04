@@ -166,6 +166,7 @@ enum rtl8192c_h2c_cmd {
 #define TX_PWR_BY_RATE_NUM_BAND		2
 #define TX_PWR_BY_RATE_NUM_RF		4
 #define TX_PWR_BY_RATE_NUM_SECTION	12
+#define TX_PWR_BY_RATE_NUM_RATE		84	/* compatible with TX_PWR_BY_RATE_NUM_SECTION */
 #define MAX_BASE_NUM_IN_PHY_REG_PG_24G  6
 #define MAX_BASE_NUM_IN_PHY_REG_PG_5G	5
 
@@ -1288,7 +1289,7 @@ struct rtl_phy {
 	u32 tx_power_by_rate_offset[TX_PWR_BY_RATE_NUM_BAND]
 				   [TX_PWR_BY_RATE_NUM_RF]
 				   [TX_PWR_BY_RATE_NUM_RF]
-				   [TX_PWR_BY_RATE_NUM_SECTION];
+				   [TX_PWR_BY_RATE_NUM_RATE];	/* compatible with TX_PWR_BY_RATE_NUM_SECTION*/
 	u8 txpwr_by_rate_base_24g[TX_PWR_BY_RATE_NUM_RF]
 				 [TX_PWR_BY_RATE_NUM_RF]
 				 [MAX_BASE_NUM_IN_PHY_REG_PG_24G];
