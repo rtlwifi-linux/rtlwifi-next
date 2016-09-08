@@ -3047,4 +3047,17 @@ static inline struct ieee80211_sta *rtl_find_sta(struct ieee80211_hw *hw,
 	return ieee80211_find_sta(mac->vif, mac_addr);
 }
 
+static inline u32 rtl_get_hal_edca_param(
+		const struct ieee80211_tx_queue_params *param)
+{
+	u32 reg = 0;
+
+	reg |= (param->txop & 0x7FF) << 16;
+	reg |= (fls(param->cw_max) & 0xF) << 12;
+	reg |= (fls(param->cw_min) & 0xF) << 8;
+	reg |= (param->aifs & 0xFF);
+
+	return reg;
+}
+
 #endif
