@@ -945,6 +945,9 @@ static int rtl_op_sta_add(struct ieee80211_hw *hw,
 		RT_TRACE(rtlpriv, COMP_MAC80211, DBG_DMESG,
 			"Add sta addr is %pM\n", sta->addr);
 		rtlpriv->cfg->ops->update_rate_tbl(hw, sta, 0);
+
+		if (rtlpriv->phydm.ops)
+			rtlpriv->phydm.ops->phydm_add_sta(rtlpriv, sta);
 	}
 
 	return 0;
@@ -959,6 +962,10 @@ static int rtl_op_sta_remove(struct ieee80211_hw *hw,
 	if (sta) {
 		RT_TRACE(rtlpriv, COMP_MAC80211, DBG_DMESG,
 			 "Remove sta addr is %pM\n", sta->addr);
+
+		if (rtlpriv->phydm.ops)
+			rtlpriv->phydm.ops->phydm_del_sta(rtlpriv, sta);
+
 		sta_entry = (struct rtl_sta_info *)sta->drv_priv;
 		sta_entry->wireless_mode = 0;
 		sta_entry->ratr_index = 0;
@@ -1432,6 +1439,9 @@ static void rtl_op_sw_scan_start(struct ieee80211_hw *hw,
 		return;
 	}
 
+	if (rtlpriv->phydm.ops)
+		rtlpriv->phydm.ops->phydm_pause_dig(rtlpriv, 1);
+
 	if (rtlpriv->cfg->ops->get_btc_status())
 		rtlpriv->btcoexist.btc_ops->btc_scan_notify(rtlpriv, 1);
 
@@ -1486,6 +1496,9 @@ static void rtl_op_sw_scan_complete(struct ieee80211_hw *hw,
 	rtlpriv->cfg->ops->scan_operation_backup(hw, SCAN_OPT_RESTORE);
 	if (rtlpriv->cfg->ops->get_btc_status())
 		rtlpriv->btcoexist.btc_ops->btc_scan_notify(rtlpriv, 0);
+
+	if (rtlpriv->phydm.ops)
+		rtlpriv->phydm.ops->phydm_pause_dig(rtlpriv, 0);
 }
 
 static int rtl_op_set_key(struct ieee80211_hw *hw, enum set_key_cmd cmd,
