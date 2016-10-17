@@ -2398,6 +2398,8 @@ struct rtl_debug {
 	/* add for debug */
 	struct dentry *debugfs_dir;
 	char debugfs_name[20];
+
+	char *msg_buf;
 };
 
 #define MIMO_PS_STATIC			0
