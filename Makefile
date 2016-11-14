@@ -27,6 +27,7 @@ CONFIG_RTLWIFI=m
 CONFIG_RTLWIFI_PCI=m
 CONFIG_RTLWIFI_USB=m
 CONFIG_RTL8192C_COMMON=m
+CONFIG_RTLWIFI_DEBUG=y
 CONFIG_RTL8192CE=m
 CONFIG_RTL8192CU=m
 CONFIG_RTL8192SE=m
@@ -75,6 +76,8 @@ obj-$(CONFIG_RTL8192EE)		+= rtl8192ee/
 
 ccflags-y += -D__CHECK_ENDIAN__
 #subdir-ccflags-y += -Werror
+ccflags-y += -DCONFIG_RTLWIFI_DEBUG
+subdir-ccflags-y += -DCONFIG_RTLWIFI_DEBUG
 
 ifeq ("$(KVER)", "3.14.35-031435-generic")
 ccflags-y += -D_ieee80211_is_robust_mgmt_frame=ieee80211_is_robust_mgmt_frame
