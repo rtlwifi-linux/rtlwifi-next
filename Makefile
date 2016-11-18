@@ -35,6 +35,8 @@ CONFIG_RTL8723AE=m
 CONFIG_RTL8723BE=m
 CONFIG_RTL8188EE=m
 CONFIG_RTLBTCOEXIST=m
+CONFIG_RTLHALMAC=m
+CONFIG_RTLPHYDM=m
 CONFIG_RTL8723_COMMON=m
 CONFIG_RTL8821AE=m
 CONFIG_RTL8192EE=m
@@ -101,6 +103,7 @@ endif
 
 	@mkdir -p $(MODDESTDIR)/btcoexist
 	@mkdir -p $(MODDESTDIR)/halmac
+	@mkdir -p $(MODDESTDIR)/phydm
 	@mkdir -p $(MODDESTDIR)/rtl8188ee
 	@mkdir -p $(MODDESTDIR)/rtl8192c
 	@mkdir -p $(MODDESTDIR)/rtl8192ce
@@ -116,6 +119,7 @@ endif
 	@install -p -D -m 644 rtlwifi.ko $(MODDESTDIR)
 	@install -p -D -m 644 ./btcoexist/btcoexist.ko $(MODDESTDIR)/btcoexist
 	@install -p -D -m 644 ./halmac/halmac.ko $(MODDESTDIR)/halmac
+	@install -p -D -m 644 ./phydm/phydm_mod.ko $(MODDESTDIR)/phydm
 	@install -p -D -m 644 ./rtl8188ee/rtl8188ee.ko $(MODDESTDIR)/rtl8188ee
 	@install -p -D -m 644 ./rtl8192c/rtl8192c-common.ko $(MODDESTDIR)/rtl8192c
 	@install -p -D -m 644 ./rtl8192ce/rtl8192ce.ko $(MODDESTDIR)/rtl8192ce
@@ -130,12 +134,14 @@ ifeq ($(COMPRESS_GZIP), y)
 	@gzip -f $(MODDESTDIR)/*.ko
 	@gzip -f $(MODDESTDIR)/btcoexist/*.ko
 	@gzip -f $(MODDESTDIR)/halmac/*.ko
+	@gzip -f $(MODDESTDIR)/phydm/*.ko
 	@gzip -f $(MODDESTDIR)/rtl8*/*.ko
 endif
 ifeq ($(COMPRESS_XZ), y)
 	@xz -f $(MODDESTDIR)/*.ko
 	@xz -f $(MODDESTDIR)/btcoexist/*.ko
 	@xz -f $(MODDESTDIR)/halmac/*.ko
+	@xz -f $(MODDESTDIR)/phydm/*.ko
 	@xz -f $(MODDESTDIR)/rtl8*/*.ko
 endif
 
@@ -159,6 +165,7 @@ clean:
 	@rm -fr halmac/*.mod.c halmac/*.mod halmac/*.o halmac/.*.cmd halmac/*.ko halmac/*~
 	@rm -fr halmac/halmac_88xx/*.mod.c halmac/halmac_88xx/*.mod halmac/halmac_88xx/*.o halmac/halmac_88xx/.*.cmd halmac/halmac_88xx/*.ko halmac/halmac_88xx/*~
 	@rm -fr halmac/halmac_88xx/halmac_8822b/*.mod.c halmac/halmac_88xx/halmac_8822b/*.mod halmac/halmac_88xx/halmac_8822b/*.o halmac/halmac_88xx/halmac_8822b/.*.cmd halmac/halmac_88xx/halmac_8822b/*.ko halmac/halmac_88xx/halmac_8822b/*~
+	@rm -fr phydm/*.mod.c phydm/*.mod phydm/*.o phydm/.*.cmd phydm/*.ko phydm/*~
 	@rm -fr *.mod.c *.mod *.o .*.cmd *.ko *~
 	@rm -fr rtl8*/*.mod.c rtl8*/*.mod rtl8*/*.o rtl8*/.*.cmd rtl8*/*.ko rtl8*/*~
 	@rm -fr bt*/*.mod.c bt*/*.mod bt*/*.o bt*/.*.cmd bt*/*.ko bt*/*~
