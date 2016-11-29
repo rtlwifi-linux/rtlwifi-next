@@ -131,6 +131,15 @@ void rtl_btc_init_hw_config(struct rtl_priv *rtlpriv)
 void rtl_btc_ips_notify(struct rtl_priv *rtlpriv, u8 type)
 {
 	exhalbtc_ips_notify(&gl_bt_coexist, type);
+
+	if (type == ERFON) {
+		/*
+		 * In some situation, it doesn't scan after leaving IPS, and
+		 * this will cause btcoex in wrong state.
+		 */
+		exhalbtc_scan_notify(&gl_bt_coexist, 1);
+		exhalbtc_scan_notify(&gl_bt_coexist, 0);
+	}
 }
 
 void rtl_btc_lps_notify(struct rtl_priv *rtlpriv, u8 type)
