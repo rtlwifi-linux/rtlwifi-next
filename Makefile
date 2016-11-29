@@ -165,10 +165,8 @@ endif
 	@echo "Uninstall rtlwifi SUCCESS"
 
 clean:
-	@rm -fr halmac/*.mod.c halmac/*.mod halmac/*.o halmac/.*.cmd halmac/*.ko halmac/*~
-	@rm -fr halmac/halmac_88xx/*.mod.c halmac/halmac_88xx/*.mod halmac/halmac_88xx/*.o halmac/halmac_88xx/.*.cmd halmac/halmac_88xx/*.ko halmac/halmac_88xx/*~
-	@rm -fr halmac/halmac_88xx/halmac_8822b/*.mod.c halmac/halmac_88xx/halmac_8822b/*.mod halmac/halmac_88xx/halmac_8822b/*.o halmac/halmac_88xx/halmac_8822b/.*.cmd halmac/halmac_88xx/halmac_8822b/*.ko halmac/halmac_88xx/halmac_8822b/*~
-	@rm -fr phydm/*.mod.c phydm/*.mod phydm/*.o phydm/.*.cmd phydm/*.ko phydm/*~
+	@find halmac/ \( -name "*.mod.c" -o -name "*.mod" -o -name "*.o" -o -name ".*.cmd" -o -name "*.ko" -o -name "*~" \) -exec rm {} \;
+	@find phydm/ \( -name "*.mod.c" -o -name "*.mod" -o -name "*.o" -o -name ".*.cmd" -o -name "*.ko" -o -name "*~" \) -exec rm {} \;
 	@rm -fr *.mod.c *.mod *.o .*.cmd *.ko *~
 	@rm -fr rtl8*/*.mod.c rtl8*/*.mod rtl8*/*.o rtl8*/.*.cmd rtl8*/*.ko rtl8*/*~
 	@rm -fr bt*/*.mod.c bt*/*.mod bt*/*.o bt*/.*.cmd bt*/*.ko bt*/*~
