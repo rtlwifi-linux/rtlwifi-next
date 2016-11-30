@@ -74,6 +74,7 @@ obj-$(CONFIG_RTLHALMAC)		+= halmac/
 obj-$(CONFIG_RTLPHYDM)		+= phydm/
 obj-$(CONFIG_RTL8723_COMMON)	+= rtl8723com/
 obj-$(CONFIG_RTL8821AE)		+= rtl8821ae/
+obj-$(CONFIG_RTL8822BE)		+= rtl8822be/
 obj-$(CONFIG_RTL8192EE)		+= rtl8192ee/
 
 ccflags-y += -D__CHECK_ENDIAN__
