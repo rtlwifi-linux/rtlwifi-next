@@ -39,6 +39,7 @@ CONFIG_RTLHALMAC=m
 CONFIG_RTLPHYDM=m
 CONFIG_RTL8723_COMMON=m
 CONFIG_RTL8821AE=m
+CONFIG_RTL8822BE=m
 CONFIG_RTL8192EE=m
 
 export CONFIG_RTL8192C_COMMON CONFIG_RTL8192CE CONFIG_RTL8192CU CONFIG_RTL8192SE CONFIG_RTL8192DE CONFIG_RTL8192EE
@@ -114,6 +115,7 @@ endif
 	@mkdir -p $(MODDESTDIR)/rtl8723ae
 	@mkdir -p $(MODDESTDIR)/rtl8723be
 	@mkdir -p $(MODDESTDIR)/rtl8821ae
+	@mkdir -p $(MODDESTDIR)/rtl8822be
 	@install -p -D -m 644 rtl_pci.ko $(MODDESTDIR)
 	@install -p -D -m 644 rtl_usb.ko $(MODDESTDIR)
 	@install -p -D -m 644 rtlwifi.ko $(MODDESTDIR)
@@ -130,6 +132,7 @@ endif
 	@install -p -D -m 644 ./rtl8723ae/rtl8723ae.ko $(MODDESTDIR)/rtl8723ae
 	@install -p -D -m 644 ./rtl8723be/rtl8723be.ko $(MODDESTDIR)/rtl8723be
 	@install -p -D -m 644 ./rtl8821ae/rtl8821ae.ko $(MODDESTDIR)/rtl8821ae
+	@install -p -D -m 644 ./rtl8822be/rtl8822be.ko $(MODDESTDIR)/rtl8822be
 ifeq ($(COMPRESS_GZIP), y)
 	@gzip -f $(MODDESTDIR)/*.ko
 	@gzip -f $(MODDESTDIR)/btcoexist/*.ko
