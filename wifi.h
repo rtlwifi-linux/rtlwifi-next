@@ -179,6 +179,7 @@ enum rtl8192c_h2c_cmd {
  */
 #define DMA_IS_64BIT 0
 #define RTL8192EE_SEG_NUM		1 /* 0:2 seg, 1: 4 seg, 2: 8 seg */
+#define RTL8822BE_SEG_NUM		1 /* 0:2 seg, 1: 4 seg, 2: 8 seg */
 
 enum rf_tx_num {
 	RF_1TX = 0,
@@ -2949,6 +2950,7 @@ enum bt_co_type {
 	BT_RTL8723B = 8,
 	BT_RTL8192E = 9,
 	BT_RTL8812A = 11,
+	BT_RTL8822B = 12,
 };
 
 enum bt_total_ant_num {
