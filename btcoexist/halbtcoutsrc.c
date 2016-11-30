@@ -697,6 +697,7 @@ bool exhalbtc_initlize_variables(struct rtl_priv *adapter)
 	btcoexist->bt_info.increase_scan_dev_num = false;
 
 	btcoexist->board_info.rfe_type = rtl_get_hwpg_rfe_type(adapter);
+	btcoexist->board_info.ant_div_cfg = 0;
 
 	return true;
 }
