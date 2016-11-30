@@ -142,6 +142,7 @@ struct btc_board_info {
 	bool bt_exist;
 
 	u8 rfe_type;
+	u8 ant_div_cfg;
 };
 
 enum btc_dbg_opcode {
