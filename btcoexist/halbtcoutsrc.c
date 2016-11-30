@@ -1053,3 +1053,16 @@ void exhalbtc_display_bt_coex_info(struct btc_coexist *btcoexist)
 	if (rtlhal->hw_type == HARDWARE_TYPE_RTL8723BE)
 		ex_btc8723b2ant_display_coex_info(btcoexist);
 }
+
+void exhalbtc_switch_band_notify(struct btc_coexist *btcoexist, u8 type)
+{
+	if (!halbtc_is_bt_coexist_available(btcoexist))
+		return;
+
+	if (btcoexist->manual_control)
+		return;
+
+	halbtc_leave_low_power();
+
+	halbtc_nomal_low_power();
+}
