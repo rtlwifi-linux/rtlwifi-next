@@ -951,6 +951,8 @@ static irqreturn_t _rtl_pci_interrupt(int irq, void *dev_id)
 	unsigned long flags;
 	u32 inta = 0;
 	u32 intb = 0;
+	u32 intc = 0;
+	u32 intd = 0;
 	irqreturn_t ret = IRQ_HANDLED;
 
 	if (rtlpci->irq_enabled == 0)
@@ -960,7 +962,7 @@ static irqreturn_t _rtl_pci_interrupt(int irq, void *dev_id)
 	rtlpriv->cfg->ops->disable_interrupt(hw);
 
 	/*read ISR: 4/8bytes */
-	rtlpriv->cfg->ops->interrupt_recognized(hw, &inta, &intb);
+	rtlpriv->cfg->ops->interrupt_recognized(hw, &inta, &intb, &intc, &intd);
 
 	/*Shared IRQ or HW disappared */
 	if (!inta || inta == 0xffff)
