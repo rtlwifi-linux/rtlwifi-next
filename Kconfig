@@ -151,4 +151,9 @@ config RTLBTCOEXIST
 	depends on RTL8723AE || RTL8723BE || RTL8821AE || RTL8192EE
 	default y
 
+config RTLHALMAC
+	tristate
+	depends on RTL8822BE
+	default y
+
 endif
