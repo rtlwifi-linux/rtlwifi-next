@@ -879,7 +879,8 @@ static void _rtl_query_bandwidth_mode(struct ieee80211_hw *hw,
 	tcb_desc->packet_bw = HT_CHANNEL_WIDTH_20_40;
 
 	if (rtlpriv->rtlhal.hw_type == HARDWARE_TYPE_RTL8812AE ||
-	    rtlpriv->rtlhal.hw_type == HARDWARE_TYPE_RTL8821AE) {
+	    rtlpriv->rtlhal.hw_type == HARDWARE_TYPE_RTL8821AE ||
+	    (rtlpriv->cfg->spec_ver & RTL_SPEC_SUPPORT_VHT)) {
 		if (mac->opmode == NL80211_IFTYPE_AP ||
 		    mac->opmode == NL80211_IFTYPE_ADHOC ||
 		    mac->opmode == NL80211_IFTYPE_MESH_POINT) {
