@@ -34,6 +34,7 @@
 #define N_MODE_MCS7_RIX 7
 #define N_MODE_MCS15_RIX 15
 
+/* in mac80211 vht mcs0-9 is in [3:0], nss is in [:4] */
 #define AC_MODE_MCS7_RIX 7
 #define AC_MODE_MCS8_RIX 8
 #define AC_MODE_MCS9_RIX 9

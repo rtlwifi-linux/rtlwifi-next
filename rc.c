@@ -42,6 +42,16 @@ static u8 _rtl_rc_get_highest_rix(struct rtl_priv *rtlpriv,
 	struct rtl_phy *rtlphy = &(rtlpriv->phy);
 	struct rtl_sta_info *sta_entry = NULL;
 	u16 wireless_mode = 0;
+	u8 nss;	/* NSS -1 */
+
+	if (get_rf_type(rtlphy) >= RF_4T4R)
+		nss = 3;
+	else if (get_rf_type(rtlphy) >= RF_3T3R)
+		nss = 2;
+	else if (get_rf_type(rtlphy) >= RF_2T2R)
+		nss = 1;
+	else
+		nss = 0;
 
 	/*
 	 *this rate is no use for true rate, firmware
@@ -66,24 +76,24 @@ static u8 _rtl_rc_get_highest_rix(struct rtl_priv *rtlpriv,
 			} else if (wireless_mode == WIRELESS_MODE_G) {
 				return G_MODE_MAX_RIX;
 			} else if (wireless_mode == WIRELESS_MODE_N_24G) {
-				if (get_rf_type(rtlphy) != RF_2T2R)
+				if (nss == 0)
 					return N_MODE_MCS7_RIX;
 				else
 					return N_MODE_MCS15_RIX;
 			} else if (wireless_mode == WIRELESS_MODE_AC_24G) {
-				return AC_MODE_MCS9_RIX;
+				return AC_MODE_MCS9_RIX | (nss << 4);
 			}
 			return 0;
 		} else {
 			if (wireless_mode == WIRELESS_MODE_A) {
 				return A_MODE_MAX_RIX;
 			} else if (wireless_mode == WIRELESS_MODE_N_5G) {
-				if (get_rf_type(rtlphy) != RF_2T2R)
+				if (nss == 0)
 					return N_MODE_MCS7_RIX;
 				else
 					return N_MODE_MCS15_RIX;
 			} else if (wireless_mode == WIRELESS_MODE_AC_5G) {
-				return AC_MODE_MCS9_RIX;
+				return AC_MODE_MCS9_RIX | (nss << 4);
 			}
 			return 0;
 		}
@@ -111,9 +121,10 @@ static void _rtl_rc_rate_set_series(struct rtl_priv *rtlpriv,
 	}
 	rate->count = tries;
 	rate->idx = rix >= 0x00 ? rix : 0x00;
-	if (rtlpriv->rtlhal.hw_type == HARDWARE_TYPE_RTL8812AE &&
+	if (((rtlpriv->rtlhal.hw_type == HARDWARE_TYPE_RTL8812AE) ||
+	     (rtlpriv->rtlhal.hw_type == HARDWARE_TYPE_RTL8822BE)) &&
 	    wireless_mode == WIRELESS_MODE_AC_5G)
-		rate->idx += 0x10;/*2NSS for 8812AE*/
+		rate->idx |= 0x10;/*2NSS for 8812AE, 8822BE*/
 
 	if (!not_data) {
 		if (txrc->short_preamble)
@@ -126,10 +137,10 @@ static void _rtl_rc_rate_set_series(struct rtl_priv *rtlpriv,
 			if (sta && (sta->vht_cap.vht_supported))
 				rate->flags |= IEEE80211_TX_RC_80_MHZ_WIDTH;
 		} else {
-			if (mac->bw_40)
-				rate->flags |= IEEE80211_TX_RC_40_MHZ_WIDTH;
 			if (mac->bw_80)
 				rate->flags |= IEEE80211_TX_RC_80_MHZ_WIDTH;
+			else if (mac->bw_40)
+				rate->flags |= IEEE80211_TX_RC_40_MHZ_WIDTH;
 		}
 
 		if (sgi_20 || sgi_40 || sgi_80)
