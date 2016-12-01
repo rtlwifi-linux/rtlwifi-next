@@ -156,4 +156,9 @@ config RTLHALMAC
 	depends on RTL8822BE
 	default y
 
+config RTLPHYDM
+	tristate
+	depends on RTL8822BE
+	default y
+
 endif
