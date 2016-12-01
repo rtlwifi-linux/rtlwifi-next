@@ -1539,6 +1539,7 @@ int rtl_pci_reset_trx_ring(struct ieee80211_hw *hw)
 				       sizeof(*rtlpci->rx_ring
 				       [rxring_idx].desc));/*clear one entry*/
 				if (rtlpriv->use_new_trx_flow) {
+					/* This is deadcode */
 					rtlpriv->cfg->ops->set_desc(hw,
 					    (u8 *)entry, false,
 					    HW_DESC_RX_PREPARE,
