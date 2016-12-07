@@ -156,7 +156,7 @@ enum rtl8192c_h2c_cmd {
 #define MAX_TX_COUNT			4
 #define MAX_REGULATION_NUM		4
 #define MAX_RF_PATH_NUM			4
-#define MAX_RATE_SECTION_NUM		6
+#define MAX_RATE_SECTION_NUM		6	/* = MAX_RATE_SECTION */
 #define MAX_2_4G_BANDWIDTH_NUM		4
 #define MAX_5G_BANDWIDTH_NUM		4
 #define	MAX_RF_PATH			4
@@ -167,8 +167,8 @@ enum rtl8192c_h2c_cmd {
 #define TX_PWR_BY_RATE_NUM_RF		4
 #define TX_PWR_BY_RATE_NUM_SECTION	12
 #define TX_PWR_BY_RATE_NUM_RATE		84	/* compatible with TX_PWR_BY_RATE_NUM_SECTION */
-#define MAX_BASE_NUM_IN_PHY_REG_PG_24G  6
-#define MAX_BASE_NUM_IN_PHY_REG_PG_5G	5
+#define MAX_BASE_NUM_IN_PHY_REG_PG_24G  6	/* MAX_RATE_SECTION */
+#define MAX_BASE_NUM_IN_PHY_REG_PG_5G	5	/* MAX_RATE_SECTION -1 */
 
 #define RTL8192EE_SEG_NUM		1 /* 0:2 seg, 1: 4 seg, 2: 8 seg */
 
@@ -265,6 +265,7 @@ enum rate_section {
 	HT_MCS8_MCS15,
 	VHT_1SSMCS0_1SSMCS9,
 	VHT_2SSMCS0_2SSMCS9,
+	MAX_RATE_SECTION,
 };
 
 enum intf_type {
