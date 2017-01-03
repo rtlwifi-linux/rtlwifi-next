@@ -106,6 +106,7 @@
 #define COMP_BT_COEXIST			BIT(30)
 #define COMP_IQK			BIT(31)
 #define COMP_HALMAC			BIT_ULL(34)
+#define COMP_PHYDM			BIT_ULL(35)
 
 /*--------------------------------------------------------------
 		Define the rt_print components
