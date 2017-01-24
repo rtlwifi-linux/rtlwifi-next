@@ -742,7 +742,8 @@ void exhalbtc_init_hw_config(struct btc_coexist *btcoexist)
 
 void exhalbtc_init_hw_config_wifi_only(struct wifi_only_cfg *wifionly_cfg)
 {
-
+	if (IS_HARDWARE_TYPE_8822B(wifionly_cfg->adapter))
+		ex_hal8822b_wifi_only_hw_config(wifionly_cfg);
 }
 
 void exhalbtc_init_coex_dm(struct btc_coexist *btcoexist)
@@ -835,7 +836,8 @@ void exhalbtc_scan_notify(struct btc_coexist *btcoexist, u8 type)
 void exhalbtc_scan_notify_wifi_only(struct wifi_only_cfg *wifionly_cfg,
 				    u8 is_5g)
 {
-
+	if (IS_HARDWARE_TYPE_8822B(wifionly_cfg->adapter))
+		ex_hal8822b_wifi_only_scannotify(wifionly_cfg, is_5g);
 }
 
 void exhalbtc_connect_notify(struct btc_coexist *btcoexist, u8 action)
@@ -1106,5 +1108,6 @@ void exhalbtc_switch_band_notify(struct btc_coexist *btcoexist, u8 type)
 void exhalbtc_switch_band_notify_wifi_only(struct wifi_only_cfg *wifionly_cfg,
 					   u8 is_5g)
 {
-
+	if (IS_HARDWARE_TYPE_8822B(wifionly_cfg->adapter))
+		ex_hal8822b_wifi_only_switchbandnotify(wifionly_cfg, is_5g);
 }
