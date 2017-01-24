@@ -3,6 +3,7 @@ btcoexist-objs :=	halbtc8192e2ant.o	\
 			halbtc8723b2ant.o	\
 			halbtc8821a1ant.o	\
 			halbtc8821a2ant.o	\
+			halbtc8822bwifionly.o	\
 			halbtcoutsrc.o		\
 			rtl_btc.o
 
