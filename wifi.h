@@ -2547,6 +2547,9 @@ struct rtl_btc_ops {
 	void (*btc_special_packet_notify)(struct rtl_priv *rtlpriv,
 					  u8 pkt_type);
 	void (*btc_record_pwr_mode)(struct rtl_priv *rtlpriv, u8 *buf, u8 len);
+	u8   (*btc_get_lps_val)(struct rtl_priv *rtlpriv);
+	u8   (*btc_get_rpwm_val)(struct rtl_priv *rtlpriv);
+	bool (*btc_is_bt_ctrl_lps)(struct rtl_priv *rtlpriv);
 };
 
 struct proxim {
