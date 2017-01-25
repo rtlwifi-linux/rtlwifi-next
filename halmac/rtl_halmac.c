@@ -917,8 +917,8 @@ int rtl_halmac_send_h2c(struct rtl_priv *rtlpriv, u8 *h2c)
 	u8 h2c_box_num = 0;
 	u32 msgbox_addr = 0;
 	u32 msgbox_ex_addr = 0;
-	u32 h2c_cmd = 0;
-	u32 h2c_cmd_ex = 0;
+	__le32 h2c_cmd = 0;
+	__le32 h2c_cmd_ex = 0;
 	s32 ret = -1;
 	unsigned long flag = 0;
 	struct rtl_hal *rtlhal = rtl_hal(rtlpriv);
@@ -943,14 +943,12 @@ int rtl_halmac_send_h2c(struct rtl_priv *rtlpriv, u8 *h2c)
 	/* Write Ext command(byte 4 -7) */
 	msgbox_ex_addr = REG_HMEBOX_E0 + (h2c_box_num * EX_MESSAGE_BOX_SIZE);
 	memcpy((u8 *)(&h2c_cmd_ex), h2c + 4, EX_MESSAGE_BOX_SIZE);
-	h2c_cmd_ex = le32_to_cpu(h2c_cmd_ex);
-	rtl_write_dword(rtlpriv, msgbox_ex_addr, h2c_cmd_ex);
+	rtl_write_dword(rtlpriv, msgbox_ex_addr, le32_to_cpu(h2c_cmd_ex));
 
 	/* Write command (byte 0 -3 ) */
 	msgbox_addr = REG_HMEBOX0 + (h2c_box_num * MESSAGE_BOX_SIZE);
 	memcpy((u8 *)(&h2c_cmd), h2c, 4);
-	h2c_cmd = le32_to_cpu(h2c_cmd);
-	rtl_write_dword(rtlpriv, msgbox_addr, h2c_cmd);
+	rtl_write_dword(rtlpriv, msgbox_addr, le32_to_cpu(h2c_cmd));
 
 	/* update last msg box number */
 	rtlhal->last_hmeboxnum = (h2c_box_num + 1) % MAX_H2C_BOX_NUMS;
