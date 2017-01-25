@@ -422,7 +422,7 @@ halmac_download_firmware_88xx(struct halmac_adapter *halmac_adapter,
 	}
 
 	fw_h2c_ver = le32_to_cpu(*(
-		(u32 *)(hamacl_fw + HALMAC_FWHDR_OFFSET_H2C_FORMAT_VER_88XX)));
+		(__le32 *)(hamacl_fw + HALMAC_FWHDR_OFFSET_H2C_FORMAT_VER_88XX)));
 	halmac_h2c_ver = H2C_FORMAT_VERSION;
 	HALMAC_RT_TRACE(
 		driver_adapter, HALMAC_MSG_INIT, DBG_DMESG,
@@ -493,7 +493,7 @@ halmac_download_firmware_88xx(struct halmac_adapter *halmac_adapter,
 	}
 
 	halmac_adapter->fw_version.version = le16_to_cpu(
-		*((u16 *)(hamacl_fw + HALMAC_FWHDR_OFFSET_VERSION_88XX)));
+		*((__le16 *)(hamacl_fw + HALMAC_FWHDR_OFFSET_VERSION_88XX)));
 	halmac_adapter->fw_version.sub_version =
 		*(hamacl_fw + HALMAC_FWHDR_OFFSET_SUBVERSION_88XX);
 	halmac_adapter->fw_version.sub_index =

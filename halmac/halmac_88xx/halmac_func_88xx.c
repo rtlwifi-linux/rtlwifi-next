@@ -3856,7 +3856,7 @@ halmac_buffer_read_88xx(struct halmac_adapter *halmac_adapter, u32 offset,
 			*(u32 *)(fifo_map + counter) =
 				HALMAC_REG_READ_32(halmac_adapter, i);
 			*(u32 *)(fifo_map + counter) =
-				le32_to_cpu(*(u32 *)(fifo_map + counter));
+				le32_to_cpu(*(__le32 *)(fifo_map + counter));
 			counter += 4;
 			if (size == counter)
 				goto HALMAC_BUF_READ_OK;
