@@ -164,5 +164,5 @@ u8 rtl_tid_to_ac(u8 tid);
 void rtl_easy_concurrent_retrytimer_callback(unsigned long data);
 extern struct rtl_global_var rtl_global_var;
 void rtl_phy_scan_operation_backup(struct ieee80211_hw *hw, u8 operation);
-
+bool rtl_check_beacon_key(struct ieee80211_hw *hw, void *data, unsigned int len);
 #endif

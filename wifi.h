@@ -999,6 +999,15 @@ struct rtl_probe_rsp {
 	struct rtl_info_element info_element[0];
 } __packed;
 
+struct rtl_beacon_keys {
+	/*u8 ssid[32];*/
+	/*u32 ssid_len;*/
+	u8 bcn_channel;
+	u16 ht_cap_info;
+	u8 ht_info_infos_0_sco; /* bit0 & bit1 in infos[0] is second channel offset */
+	bool valid;
+};
+
 /*LED related.*/
 /*ledpin Identify how to implement this SW led.*/
 struct rtl_led {
@@ -1430,6 +1439,8 @@ struct rtl_mac {
 	/*Probe Beacon management */
 	struct rtl_tid_data tids[MAX_TID_COUNT];
 	enum rtl_link_state link_state;
+	struct rtl_beacon_keys cur_beacon_keys;
+	u8 new_beacon_cnt;
 
 	int n_channels;
 	int n_bitrates;

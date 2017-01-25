@@ -908,6 +908,8 @@ static void _rtl_pci_rx_interrupt(struct ieee80211_hw *hw)
 			     ieee80211_is_probe_resp(fc))) {
 				dev_kfree_skb_any(skb);
 			} else {
+				rtl_check_beacon_key(hw, (void *)skb->data,
+						     skb->len);
 				_rtl_pci_rx_to_mac80211(hw, skb, rx_status);
 			}
 		} else {
