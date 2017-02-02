@@ -1092,8 +1092,7 @@ int rtl8822be_hw_init(struct ieee80211_hw *hw)
 	/* use halmac to init */
 	err = rtlpriv->halmac.ops->halmac_init_hal(rtlpriv);
 	if (err) {
-		RT_TRACE(rtlpriv, COMP_ERR, DBG_EMERG,
-			 "halmac_init_hal failed\n");
+		pr_err("halmac_init_hal failed\n");
 		rtlhal->fw_ready = false;
 		return err;
 	}
@@ -1221,8 +1220,7 @@ static int _rtl8822be_set_media_status(struct ieee80211_hw *hw,
 			 "Set Network type to AP!\n");
 		break;
 	default:
-		RT_TRACE(rtlpriv, COMP_ERR, DBG_EMERG,
-			 "Network type %d not support!\n", type);
+		pr_err("Network type %d not support!\n", type);
 		return 1;
 	}
 
@@ -1889,8 +1887,7 @@ static void _rtl8822be_read_adapter_info(struct ieee80211_hw *hw)
 	int err;
 
 	if (rtlefuse->epromtype != EEPROM_BOOT_EFUSE) {
-		RT_TRACE(rtlpriv, COMP_ERR, DBG_EMERG,
-			 "RTL8822B Not boot from efuse!!");
+		pr_err("RTL8822B Not boot from efuse!!");
 		return;
 	}
 
@@ -1898,16 +1895,14 @@ static void _rtl8822be_read_adapter_info(struct ieee80211_hw *hw)
 	err = halmac_ops->halmac_get_logical_efuse_size(rtlpriv, &efuse_size);
 
 	if (err || !efuse_size) {
-		RT_TRACE(rtlpriv, COMP_ERR, DBG_EMERG,
-			 "halmac_get_logical_efuse_size err=%d efuse_size=0x%X",
-			 err, efuse_size);
+		pr_err("halmac_get_logical_efuse_size err=%d efuse_size=0x%X",
+		       err, efuse_size);
 		efuse_size = HWSET_MAX_SIZE;
 	}
 
 	if (efuse_size > HWSET_MAX_SIZE) {
-		RT_TRACE(rtlpriv, COMP_ERR, DBG_EMERG,
-			 "halmac_get_logical_efuse_size efuse_size=0x%X > 0x%X",
-			 efuse_size, HWSET_MAX_SIZE);
+		pr_err("halmac_get_logical_efuse_size efuse_size=0x%X > 0x%X",
+		       efuse_size, HWSET_MAX_SIZE);
 		efuse_size = HWSET_MAX_SIZE;
 	}
 
@@ -1917,8 +1912,7 @@ static void _rtl8822be_read_adapter_info(struct ieee80211_hw *hw)
 	err = halmac_ops->halmac_read_logical_efuse_map(rtlpriv, hwinfo,
 							efuse_size);
 	if (err) {
-		RT_TRACE(rtlpriv, COMP_ERR, DBG_EMERG,
-			 "%s: <ERROR> fail to get efuse map!\n", __func__);
+		pr_err("%s: <ERROR> fail to get efuse map!\n", __func__);
 		goto label_end;
 	}
 
@@ -2077,7 +2071,7 @@ void rtl8822be_read_eeprom_info(struct ieee80211_hw *hw,
 		rtlefuse->autoload_failflag = false;
 		_rtl8822be_read_adapter_info(hw);
 	} else {
-		RT_TRACE(rtlpriv, COMP_ERR, DBG_EMERG, "Autoload ERR!!\n");
+		pr_err("Autoload ERR!!\n");
 	}
 	_rtl8822be_hal_customized_behavior(hw);
 
@@ -2394,9 +2388,7 @@ void rtl8822be_set_key(struct ieee80211_hw *hw, u32 key_index, u8 *p_macaddr,
 				entry_id =
 					rtl_cam_get_free_entry(hw, p_macaddr);
 				if (entry_id >= TOTAL_CAM_ENTRY) {
-					RT_TRACE(
-						rtlpriv, COMP_SEC, DBG_EMERG,
-						"Can not find free hwsecurity cam entry\n");
+					pr_err("Can not find free hwsecurity cam entry\n");
 					return;
 				}
 			} else {

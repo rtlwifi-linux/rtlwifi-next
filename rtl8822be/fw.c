@@ -484,8 +484,7 @@ bool rtl8822b_halmac_cb_write_data_rsvd_page(struct rtl_priv *rtlpriv, u8 *buf,
 	}
 
 	if (count >= 20)
-		RT_TRACE(rtlpriv, COMP_ERR, DBG_EMERG,
-			 "%s polling beacon fail\n", __func__);
+		pr_err("%s polling beacon fail\n", __func__);
 
 	return true;
 }
