@@ -28,20 +28,6 @@
 #include "../wifi.h"
 #include <asm/byteorder.h>
 
-#define HALMAC_PLATFORM_LITTLE_ENDIAN 1
-#define HALMAC_PLATFORM_BIG_ENDIAN 0
-
-/* Note : Named HALMAC_PLATFORM_LITTLE_ENDIAN / HALMAC_PLATFORM_BIG_ENDIAN
- * is not mandatory. But Little endian must be '1'. Big endian must be '0'
- */
-#if defined(__LITTLE_ENDIAN)
-#define HALMAC_SYSTEM_ENDIAN HALMAC_PLATFORM_LITTLE_ENDIAN
-#elif defined(__BIG_ENDIAN)
-#define HALMAC_SYSTEM_ENDIAN HALMAC_PLATFORM_BIG_ENDIAN
-#else
-#error
-#endif
-
 /* define the Platform SDIO Bus CLK */
 #define PLATFORM_SD_CLK 50000000 /*50MHz*/
 

@@ -86,11 +86,6 @@
 
 /* Swap Little-endian <-> Big-endia*/
 
-/*1->Little endian 0->Big endian*/
-#if HALMAC_SYSTEM_ENDIAN
-#else
-#endif
-
 #define HALMAC_ALIGN(x, a) HALMAC_ALIGN_MASK(x, (a) - 1)
 #define HALMAC_ALIGN_MASK(x, mask) (((x) + (mask)) & ~(mask))
 
@@ -988,13 +983,6 @@ struct halmac_platform_api {
 				 enum halmac_cmd_process_status process_status,
 				 u8 *buf, u32 size);
 };
-
-/*1->Little endian 0->Big endian*/
-#if HALMAC_SYSTEM_ENDIAN
-
-#else
-
-#endif
 
 /* User can not use members in address_l_h, use address[6] is mandatory */
 union halmac_wlan_addr {
