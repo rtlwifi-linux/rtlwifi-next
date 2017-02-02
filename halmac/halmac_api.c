@@ -312,11 +312,6 @@ halmac_init_adapter(void *driver_adapter,
 	struct halmac_adapter *halmac_adapter = (struct halmac_adapter *)NULL;
 	enum halmac_ret_status status = HALMAC_RET_SUCCESS;
 
-	union {
-		u32 i;
-		u8 x[4];
-	} ENDIAN_CHECK = {0x01000000};
-
 	status = halmac_check_platform_api(driver_adapter, halmac_interface,
 					   halmac_platform_api);
 	if (status != HALMAC_RET_SUCCESS)
@@ -334,13 +329,6 @@ halmac_init_adapter(void *driver_adapter,
 
 	HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_DMESG,
 			"halmac_init_adapter_88xx ==========>\n");
-
-	/* Check endian setting - Little endian : 1, Big endian : 0*/
-	if (ENDIAN_CHECK.x[0] == HALMAC_SYSTEM_ENDIAN) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"Endian setting Err!!\n");
-		return HALMAC_RET_ENDIAN_ERR;
-	}
 
 	halmac_adapter = kzalloc(sizeof(*halmac_adapter), GFP_KERNEL);
 	if (!halmac_adapter) {
