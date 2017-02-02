@@ -2355,7 +2355,7 @@ bool rtl_check_beacon_key(struct ieee80211_hw *hw, void *data, unsigned int len)
 		bcn_key.bcn_channel = ht_oper_ie->primary_chan;
 
 	if (ht_cap)
-		bcn_key.ht_cap_info = ht_cap_ie->cap_info;
+		bcn_key.ht_cap_info = __le16_to_cpu(ht_cap_ie->cap_info);
 
 	if (ht_oper)
 		bcn_key.ht_info_infos_0_sco = ht_oper_ie->ht_param & 0x03;

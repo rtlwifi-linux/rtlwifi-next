@@ -32,26 +32,263 @@
 static enum halmac_ret_status
 halmac_check_platform_api(void *driver_adapter,
 			  enum halmac_interface halmac_interface,
-			  struct halmac_platform_api *halmac_platform_api);
+			  struct halmac_platform_api *halmac_platform_api)
+{
+	void *adapter_local = NULL;
+
+	adapter_local = driver_adapter;
+
+	if (!halmac_platform_api)
+		return HALMAC_RET_PLATFORM_API_NULL;
+
+	if (halmac_interface == HALMAC_INTERFACE_SDIO) {
+		if (!halmac_platform_api->SDIO_CMD52_READ) {
+			HALMAC_RT_TRACE(
+				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
+				"(!halmac_platform_api->SDIO_CMD52_READ)\n");
+			return HALMAC_RET_PLATFORM_API_NULL;
+		}
+		if (!halmac_platform_api->SDIO_CMD53_READ_8) {
+			HALMAC_RT_TRACE(
+				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
+				"(!halmac_platform_api->SDIO_CMD53_READ_8)\n");
+			return HALMAC_RET_PLATFORM_API_NULL;
+		}
+		if (!halmac_platform_api->SDIO_CMD53_READ_16) {
+			HALMAC_RT_TRACE(
+				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
+				"(!halmac_platform_api->SDIO_CMD53_READ_16)\n");
+			return HALMAC_RET_PLATFORM_API_NULL;
+		}
+		if (!halmac_platform_api->SDIO_CMD53_READ_32) {
+			HALMAC_RT_TRACE(
+				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
+				"(!halmac_platform_api->SDIO_CMD53_READ_32)\n");
+			return HALMAC_RET_PLATFORM_API_NULL;
+		}
+		if (!halmac_platform_api->SDIO_CMD53_READ_N) {
+			HALMAC_RT_TRACE(
+				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
+				"(!halmac_platform_api->SDIO_CMD53_READ_N)\n");
+			return HALMAC_RET_PLATFORM_API_NULL;
+		}
+		if (!halmac_platform_api->SDIO_CMD52_WRITE) {
+			HALMAC_RT_TRACE(
+				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
+				"(!halmac_platform_api->SDIO_CMD52_WRITE)\n");
+			return HALMAC_RET_PLATFORM_API_NULL;
+		}
+		if (!halmac_platform_api->SDIO_CMD53_WRITE_8) {
+			HALMAC_RT_TRACE(
+				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
+				"(!halmac_platform_api->SDIO_CMD53_WRITE_8)\n");
+			return HALMAC_RET_PLATFORM_API_NULL;
+		}
+		if (!halmac_platform_api->SDIO_CMD53_WRITE_16) {
+			HALMAC_RT_TRACE(
+				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
+				"(!halmac_platform_api->SDIO_CMD53_WRITE_16)\n");
+			return HALMAC_RET_PLATFORM_API_NULL;
+		}
+		if (!halmac_platform_api->SDIO_CMD53_WRITE_32) {
+			HALMAC_RT_TRACE(
+				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
+				"(!halmac_platform_api->SDIO_CMD53_WRITE_32)\n");
+			return HALMAC_RET_PLATFORM_API_NULL;
+		}
+	}
+
+	if (halmac_interface == HALMAC_INTERFACE_USB ||
+	    halmac_interface == HALMAC_INTERFACE_PCIE) {
+		if (!halmac_platform_api->REG_READ_8) {
+			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
+					DBG_EMERG,
+					"(!halmac_platform_api->REG_READ_8)\n");
+			return HALMAC_RET_PLATFORM_API_NULL;
+		}
+		if (!halmac_platform_api->REG_READ_16) {
+			HALMAC_RT_TRACE(
+				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
+				"(!halmac_platform_api->REG_READ_16)\n");
+			return HALMAC_RET_PLATFORM_API_NULL;
+		}
+		if (!halmac_platform_api->REG_READ_32) {
+			HALMAC_RT_TRACE(
+				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
+				"(!halmac_platform_api->REG_READ_32)\n");
+			return HALMAC_RET_PLATFORM_API_NULL;
+		}
+		if (!halmac_platform_api->REG_WRITE_8) {
+			HALMAC_RT_TRACE(
+				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
+				"(!halmac_platform_api->REG_WRITE_8)\n");
+			return HALMAC_RET_PLATFORM_API_NULL;
+		}
+		if (!halmac_platform_api->REG_WRITE_16) {
+			HALMAC_RT_TRACE(
+				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
+				"(!halmac_platform_api->REG_WRITE_16)\n");
+			return HALMAC_RET_PLATFORM_API_NULL;
+		}
+		if (!halmac_platform_api->REG_WRITE_32) {
+			HALMAC_RT_TRACE(
+				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
+				"(!halmac_platform_api->REG_WRITE_32)\n");
+			return HALMAC_RET_PLATFORM_API_NULL;
+		}
+	}
+
+	if (!halmac_platform_api->EVENT_INDICATION) {
+		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
+				"(!halmac_platform_api->EVENT_INDICATION)\n");
+		return HALMAC_RET_PLATFORM_API_NULL;
+	}
+
+	HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_DMESG,
+			"halmac_check_platform_api ==========>\n");
+
+	return HALMAC_RET_SUCCESS;
+}
+
+static enum halmac_ret_status
+halmac_convert_to_sdio_bus_offset(u32 *halmac_offset)
+{
+	switch ((*halmac_offset) & 0xFFFF0000) {
+	case WLAN_IOREG_OFFSET:
+		*halmac_offset = (HALMAC_SDIO_CMD_ADDR_MAC_REG << 13) |
+				 (*halmac_offset & HALMAC_WLAN_MAC_REG_MSK);
+		break;
+	case SDIO_LOCAL_OFFSET:
+		*halmac_offset = (HALMAC_SDIO_CMD_ADDR_SDIO_REG << 13) |
+				 (*halmac_offset & HALMAC_SDIO_LOCAL_MSK);
+		break;
+	default:
+		*halmac_offset = 0xFFFFFFFF;
+		return HALMAC_RET_CONVERT_SDIO_OFFSET_FAIL;
+	}
+
+	return HALMAC_RET_SUCCESS;
+}
+
+static u8
+platform_reg_read_8_sdio(void *driver_adapter,
+			 struct halmac_platform_api *halmac_platform_api,
+			 u32 offset)
+{
+	u8 value8;
+	u32 halmac_offset = offset;
+	enum halmac_ret_status status = HALMAC_RET_SUCCESS;
+
+	if ((halmac_offset & 0xFFFF0000) == 0)
+		halmac_offset |= WLAN_IOREG_OFFSET;
+
+	status = halmac_convert_to_sdio_bus_offset(&halmac_offset);
+	if (status != HALMAC_RET_SUCCESS) {
+		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
+				"platform_reg_read_8_sdio error = %x\n",
+				status);
+		return status;
+	}
+
+	value8 = halmac_platform_api->SDIO_CMD52_READ(driver_adapter,
+						      halmac_offset);
+
+	return value8;
+}
+
+static enum halmac_ret_status
+platform_reg_write_8_sdio(void *driver_adapter,
+			  struct halmac_platform_api *halmac_platform_api,
+			  u32 offset, u8 data)
+{
+	enum halmac_ret_status status = HALMAC_RET_SUCCESS;
+	u32 halmac_offset = offset;
+
+	if ((halmac_offset & 0xFFFF0000) == 0)
+		halmac_offset |= WLAN_IOREG_OFFSET;
+
+	status = halmac_convert_to_sdio_bus_offset(&halmac_offset);
+
+	if (status != HALMAC_RET_SUCCESS) {
+		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
+				"halmac_reg_write_8_sdio_88xx error = %x\n",
+				status);
+		return status;
+	}
+	halmac_platform_api->SDIO_CMD52_WRITE(driver_adapter, halmac_offset,
+					      data);
+
+	return HALMAC_RET_SUCCESS;
+}
 
 static enum halmac_ret_status
 halmac_get_chip_info(void *driver_adapter,
 		     struct halmac_platform_api *halmac_platform_api,
 		     enum halmac_interface halmac_interface,
-		     struct halmac_adapter *halmac_adapter);
+		     struct halmac_adapter *halmac_adapter)
+{
+	struct halmac_api *halmac_api = (struct halmac_api *)NULL;
+	u8 chip_id, chip_version;
+	u32 polling_count;
 
-static u8
-platform_reg_read_8_sdio(void *driver_adapter,
-			 struct halmac_platform_api *halmac_platform_api,
-			 u32 offset);
+	halmac_api = (struct halmac_api *)halmac_adapter->halmac_api;
 
-static enum halmac_ret_status
-plarform_reg_write_8_sdio(void *driver_adapter,
-			  struct halmac_platform_api *halmac_platform_api,
-			  u32 offset, u8 data);
+	/* Get Chip_id and Chip_version */
+	if (halmac_adapter->halmac_interface == HALMAC_INTERFACE_SDIO) {
+		platform_reg_write_8_sdio(
+			driver_adapter, halmac_platform_api, REG_SDIO_HSUS_CTRL,
+			platform_reg_read_8_sdio(driver_adapter,
+						 halmac_platform_api,
+						 REG_SDIO_HSUS_CTRL) &
+				~(BIT(0)));
 
-static enum halmac_ret_status
-halmac_convert_to_sdio_bus_offset(u32 *halmac_offset);
+		polling_count = 10000;
+		while (!(platform_reg_read_8_sdio(driver_adapter,
+						  halmac_platform_api,
+						  REG_SDIO_HSUS_CTRL) &
+			 0x02)) {
+			polling_count--;
+			if (polling_count == 0)
+				return HALMAC_RET_SDIO_LEAVE_SUSPEND_FAIL;
+		}
+
+		chip_id = platform_reg_read_8_sdio(
+			driver_adapter, halmac_platform_api, REG_SYS_CFG2);
+		chip_version = platform_reg_read_8_sdio(driver_adapter,
+							halmac_platform_api,
+							REG_SYS_CFG1 + 1) >>
+			       4;
+	} else {
+		chip_id = halmac_platform_api->REG_READ_8(driver_adapter,
+							  REG_SYS_CFG2);
+		chip_version = halmac_platform_api->REG_READ_8(
+				       driver_adapter, REG_SYS_CFG1 + 1) >>
+			       4;
+	}
+
+	HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_DMESG,
+			"[TRACE]Chip id : 0x%X\n", chip_id);
+	HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_DMESG,
+			"[TRACE]Chip version : 0x%X\n", chip_version);
+
+	halmac_adapter->chip_version = (enum halmac_chip_ver)chip_version;
+
+	if (chip_id == HALMAC_CHIP_ID_HW_DEF_8822B)
+		halmac_adapter->chip_id = HALMAC_CHIP_ID_8822B;
+	else if (chip_id == HALMAC_CHIP_ID_HW_DEF_8821C)
+		halmac_adapter->chip_id = HALMAC_CHIP_ID_8821C;
+	else if (chip_id == HALMAC_CHIP_ID_HW_DEF_8814B)
+		halmac_adapter->chip_id = HALMAC_CHIP_ID_8814B;
+	else if (chip_id == HALMAC_CHIP_ID_HW_DEF_8197F)
+		halmac_adapter->chip_id = HALMAC_CHIP_ID_8197F;
+	else
+		halmac_adapter->chip_id = HALMAC_CHIP_ID_UNDEFINE;
+
+	if (halmac_adapter->chip_id == HALMAC_CHIP_ID_UNDEFINE)
+		return HALMAC_RET_CHIP_NOT_SUPPORT;
+
+	return HALMAC_RET_SUCCESS;
+}
 
 /**
  * halmac_init_adapter() - init halmac_adapter
@@ -210,127 +447,6 @@ halmac_deinit_adapter(struct halmac_adapter *halmac_adapter)
 	return HALMAC_RET_SUCCESS;
 }
 
-static enum halmac_ret_status
-halmac_check_platform_api(void *driver_adapter,
-			  enum halmac_interface halmac_interface,
-			  struct halmac_platform_api *halmac_platform_api)
-{
-	void *adapter_local = NULL;
-
-	adapter_local = driver_adapter;
-
-	if (!halmac_platform_api)
-		return HALMAC_RET_PLATFORM_API_NULL;
-
-	if (halmac_interface == HALMAC_INTERFACE_SDIO) {
-		if (!halmac_platform_api->SDIO_CMD52_READ) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"(!halmac_platform_api->SDIO_CMD52_READ)\n");
-			return HALMAC_RET_PLATFORM_API_NULL;
-		}
-		if (!halmac_platform_api->SDIO_CMD53_READ_8) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"(!halmac_platform_api->SDIO_CMD53_READ_8)\n");
-			return HALMAC_RET_PLATFORM_API_NULL;
-		}
-		if (!halmac_platform_api->SDIO_CMD53_READ_16) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"(!halmac_platform_api->SDIO_CMD53_READ_16)\n");
-			return HALMAC_RET_PLATFORM_API_NULL;
-		}
-		if (!halmac_platform_api->SDIO_CMD53_READ_32) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"(!halmac_platform_api->SDIO_CMD53_READ_32)\n");
-			return HALMAC_RET_PLATFORM_API_NULL;
-		}
-		if (!halmac_platform_api->SDIO_CMD53_READ_N) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"(!halmac_platform_api->SDIO_CMD53_READ_N)\n");
-			return HALMAC_RET_PLATFORM_API_NULL;
-		}
-		if (!halmac_platform_api->SDIO_CMD52_WRITE) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"(!halmac_platform_api->SDIO_CMD52_WRITE)\n");
-			return HALMAC_RET_PLATFORM_API_NULL;
-		}
-		if (!halmac_platform_api->SDIO_CMD53_WRITE_8) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"(!halmac_platform_api->SDIO_CMD53_WRITE_8)\n");
-			return HALMAC_RET_PLATFORM_API_NULL;
-		}
-		if (!halmac_platform_api->SDIO_CMD53_WRITE_16) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"(!halmac_platform_api->SDIO_CMD53_WRITE_16)\n");
-			return HALMAC_RET_PLATFORM_API_NULL;
-		}
-		if (!halmac_platform_api->SDIO_CMD53_WRITE_32) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"(!halmac_platform_api->SDIO_CMD53_WRITE_32)\n");
-			return HALMAC_RET_PLATFORM_API_NULL;
-		}
-	}
-
-	if (halmac_interface == HALMAC_INTERFACE_USB ||
-	    halmac_interface == HALMAC_INTERFACE_PCIE) {
-		if (!halmac_platform_api->REG_READ_8) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
-					DBG_EMERG,
-					"(!halmac_platform_api->REG_READ_8)\n");
-			return HALMAC_RET_PLATFORM_API_NULL;
-		}
-		if (!halmac_platform_api->REG_READ_16) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"(!halmac_platform_api->REG_READ_16)\n");
-			return HALMAC_RET_PLATFORM_API_NULL;
-		}
-		if (!halmac_platform_api->REG_READ_32) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"(!halmac_platform_api->REG_READ_32)\n");
-			return HALMAC_RET_PLATFORM_API_NULL;
-		}
-		if (!halmac_platform_api->REG_WRITE_8) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"(!halmac_platform_api->REG_WRITE_8)\n");
-			return HALMAC_RET_PLATFORM_API_NULL;
-		}
-		if (!halmac_platform_api->REG_WRITE_16) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"(!halmac_platform_api->REG_WRITE_16)\n");
-			return HALMAC_RET_PLATFORM_API_NULL;
-		}
-		if (!halmac_platform_api->REG_WRITE_32) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"(!halmac_platform_api->REG_WRITE_32)\n");
-			return HALMAC_RET_PLATFORM_API_NULL;
-		}
-	}
-
-	if (!halmac_platform_api->EVENT_INDICATION) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"(!halmac_platform_api->EVENT_INDICATION)\n");
-		return HALMAC_RET_PLATFORM_API_NULL;
-	}
-
-	HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_DMESG,
-			"halmac_check_platform_api ==========>\n");
-
-	return HALMAC_RET_SUCCESS;
-}
-
 /**
  * halmac_get_version() - get HALMAC version
  * @version : return version of major, prototype and minor information
@@ -343,146 +459,6 @@ enum halmac_ret_status halmac_get_version(struct halmac_ver *version)
 	version->major_ver = (u8)HALMAC_MAJOR_VER;
 	version->prototype_ver = (u8)HALMAC_PROTOTYPE_VER;
 	version->minor_ver = (u8)HALMAC_MINOR_VER;
-
-	return HALMAC_RET_SUCCESS;
-}
-
-static enum halmac_ret_status
-halmac_get_chip_info(void *driver_adapter,
-		     struct halmac_platform_api *halmac_platform_api,
-		     enum halmac_interface halmac_interface,
-		     struct halmac_adapter *halmac_adapter)
-{
-	struct halmac_api *halmac_api = (struct halmac_api *)NULL;
-	u8 chip_id, chip_version;
-	u32 polling_count;
-
-	halmac_api = (struct halmac_api *)halmac_adapter->halmac_api;
-
-	/* Get Chip_id and Chip_version */
-	if (halmac_adapter->halmac_interface == HALMAC_INTERFACE_SDIO) {
-		plarform_reg_write_8_sdio(
-			driver_adapter, halmac_platform_api, REG_SDIO_HSUS_CTRL,
-			platform_reg_read_8_sdio(driver_adapter,
-						 halmac_platform_api,
-						 REG_SDIO_HSUS_CTRL) &
-				~(BIT(0)));
-
-		polling_count = 10000;
-		while (!(platform_reg_read_8_sdio(driver_adapter,
-						  halmac_platform_api,
-						  REG_SDIO_HSUS_CTRL) &
-			 0x02)) {
-			polling_count--;
-			if (polling_count == 0)
-				return HALMAC_RET_SDIO_LEAVE_SUSPEND_FAIL;
-		}
-
-		chip_id = platform_reg_read_8_sdio(
-			driver_adapter, halmac_platform_api, REG_SYS_CFG2);
-		chip_version = platform_reg_read_8_sdio(driver_adapter,
-							halmac_platform_api,
-							REG_SYS_CFG1 + 1) >>
-			       4;
-	} else {
-		chip_id = halmac_platform_api->REG_READ_8(driver_adapter,
-							  REG_SYS_CFG2);
-		chip_version = halmac_platform_api->REG_READ_8(
-				       driver_adapter, REG_SYS_CFG1 + 1) >>
-			       4;
-	}
-
-	HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_DMESG,
-			"[TRACE]Chip id : 0x%X\n", chip_id);
-	HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_DMESG,
-			"[TRACE]Chip version : 0x%X\n", chip_version);
-
-	halmac_adapter->chip_version = (enum halmac_chip_ver)chip_version;
-
-	if (chip_id == HALMAC_CHIP_ID_HW_DEF_8822B)
-		halmac_adapter->chip_id = HALMAC_CHIP_ID_8822B;
-	else if (chip_id == HALMAC_CHIP_ID_HW_DEF_8821C)
-		halmac_adapter->chip_id = HALMAC_CHIP_ID_8821C;
-	else if (chip_id == HALMAC_CHIP_ID_HW_DEF_8814B)
-		halmac_adapter->chip_id = HALMAC_CHIP_ID_8814B;
-	else if (chip_id == HALMAC_CHIP_ID_HW_DEF_8197F)
-		halmac_adapter->chip_id = HALMAC_CHIP_ID_8197F;
-	else
-		halmac_adapter->chip_id = HALMAC_CHIP_ID_UNDEFINE;
-
-	if (halmac_adapter->chip_id == HALMAC_CHIP_ID_UNDEFINE)
-		return HALMAC_RET_CHIP_NOT_SUPPORT;
-
-	return HALMAC_RET_SUCCESS;
-}
-
-static u8
-platform_reg_read_8_sdio(void *driver_adapter,
-			 struct halmac_platform_api *halmac_platform_api,
-			 u32 offset)
-{
-	u8 value8;
-	u32 halmac_offset = offset;
-	enum halmac_ret_status status = HALMAC_RET_SUCCESS;
-
-	if ((halmac_offset & 0xFFFF0000) == 0)
-		halmac_offset |= WLAN_IOREG_OFFSET;
-
-	status = halmac_convert_to_sdio_bus_offset(&halmac_offset);
-	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"platform_reg_read_8_sdio error = %x\n",
-				status);
-		return status;
-	}
-
-	value8 = halmac_platform_api->SDIO_CMD52_READ(driver_adapter,
-						      halmac_offset);
-
-	return value8;
-}
-
-static enum halmac_ret_status
-plarform_reg_write_8_sdio(void *driver_adapter,
-			  struct halmac_platform_api *halmac_platform_api,
-			  u32 offset, u8 data)
-{
-	enum halmac_ret_status status = HALMAC_RET_SUCCESS;
-	u32 halmac_offset = offset;
-
-	if ((halmac_offset & 0xFFFF0000) == 0)
-		halmac_offset |= WLAN_IOREG_OFFSET;
-
-	status = halmac_convert_to_sdio_bus_offset(&halmac_offset);
-
-	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"halmac_reg_write_8_sdio_88xx error = %x\n",
-				status);
-		return status;
-	}
-	halmac_platform_api->SDIO_CMD52_WRITE(driver_adapter, halmac_offset,
-					      data);
-
-	return HALMAC_RET_SUCCESS;
-}
-
-static enum halmac_ret_status
-halmac_convert_to_sdio_bus_offset(u32 *halmac_offset)
-{
-	switch ((*halmac_offset) & 0xFFFF0000) {
-	case WLAN_IOREG_OFFSET:
-		*halmac_offset = (HALMAC_SDIO_CMD_ADDR_MAC_REG << 13) |
-				 (*halmac_offset & HALMAC_WLAN_MAC_REG_MSK);
-		break;
-	case SDIO_LOCAL_OFFSET:
-		*halmac_offset = (HALMAC_SDIO_CMD_ADDR_SDIO_REG << 13) |
-				 (*halmac_offset & HALMAC_SDIO_LOCAL_MSK);
-		break;
-	default:
-		*halmac_offset = 0xFFFFFFFF;
-		return HALMAC_RET_CONVERT_SDIO_OFFSET_FAIL;
-	}
 
 	return HALMAC_RET_SUCCESS;
 }

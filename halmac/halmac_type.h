@@ -1004,10 +1004,12 @@ union halmac_wlan_addr {
 	struct {
 		union {
 			u32 address_low;
+			__le32 le_address_low;
 			u8 address_low_b[4];
 		};
 		union {
 			u16 address_high;
+			__le16 le_address_high;
 			u8 address_high_b[2];
 		};
 	} address_l_h;
