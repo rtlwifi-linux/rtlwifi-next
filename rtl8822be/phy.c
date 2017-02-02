@@ -898,7 +898,7 @@ bool rtl8822be_load_txpower_by_rate(struct ieee80211_hw *hw)
 	rtstatus = rtlpriv->phydm.ops->phydm_load_txpower_by_rate(rtlpriv);
 
 	if (!rtstatus) {
-		RT_TRACE(rtlpriv, COMP_ERR, DBG_EMERG, "BB_PG Reg Fail!!");
+		pr_err("BB_PG Reg Fail!!");
 		return false;
 	}
 
@@ -923,7 +923,7 @@ bool rtl8822be_load_txpower_limit(struct ieee80211_hw *hw)
 	rtstatus = rtlpriv->phydm.ops->phydm_load_txpower_limit(rtlpriv);
 
 	if (!rtstatus) {
-		RT_TRACE(rtlpriv, COMP_ERR, DBG_EMERG, "RF TxPwr Limit Fail!!");
+		pr_err("RF TxPwr Limit Fail!!");
 		return false;
 	}
 
@@ -1906,8 +1906,7 @@ void rtl8822be_phy_scan_operation_backup(struct ieee80211_hw *hw, u8 operation)
 						      (u8 *)&iotype);
 			break;
 		default:
-			RT_TRACE(rtlpriv, COMP_ERR, DBG_EMERG,
-				 "Unknown Scan Backup operation.\n");
+			pr_err("Unknown Scan Backup operation.\n");
 			break;
 		}
 	}
@@ -2145,8 +2144,7 @@ bool rtl8822be_phy_set_io_cmd(struct ieee80211_hw *hw, enum io_type iotype)
 			postprocessing = true;
 			break;
 		default:
-			RT_TRACE(rtlpriv, COMP_ERR, DBG_EMERG,
-				 "switch case not process\n");
+			pr_err("switch case not process\n");
 			break;
 		}
 	} while (false);
@@ -2177,8 +2175,7 @@ static void rtl8822be_phy_set_io(struct ieee80211_hw *hw)
 	case IO_CMD_PAUSE_BAND1_DM_BY_SCAN:
 		break;
 	default:
-		RT_TRACE(rtlpriv, COMP_ERR, DBG_EMERG,
-			 "switch case not process\n");
+		pr_err("switch case not process\n");
 		break;
 	}
 	rtlphy->set_io_inprogress = false;
@@ -2279,8 +2276,7 @@ static bool _rtl8822be_phy_set_rf_power_state(struct ieee80211_hw *hw,
 		}
 		break;
 	default:
-		RT_TRACE(rtlpriv, COMP_ERR, DBG_EMERG,
-			 "switch case not process\n");
+		pr_err("switch case not process\n");
 		bresult = false;
 		break;
 	}
