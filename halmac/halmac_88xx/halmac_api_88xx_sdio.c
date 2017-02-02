@@ -272,6 +272,7 @@ u16 halmac_reg_read_16_sdio_88xx(struct halmac_adapter *halmac_adapter,
 	union {
 		u16 word;
 		u8 byte[2];
+		__le16 le_word;
 	} value16 = {0x0000};
 
 	if (halmac_adapter_validate(halmac_adapter) != HALMAC_RET_SUCCESS)
@@ -306,7 +307,7 @@ u16 halmac_reg_read_16_sdio_88xx(struct halmac_adapter *halmac_adapter,
 			PLATFORM_SDIO_CMD52_READ(driver_adapter, halmac_offset);
 		value16.byte[1] = PLATFORM_SDIO_CMD52_READ(driver_adapter,
 							   halmac_offset + 1);
-		value16.word = le16_to_cpu(value16.word);
+		value16.word = le16_to_cpu(value16.le_word);
 	} else {
 #if (PLATFORM_SD_CLK > HALMAC_SD_CLK_THRESHOLD_88XX)
 		if ((halmac_offset & 0xffffef00) == 0x00000000) {
@@ -404,6 +405,7 @@ u32 halmac_reg_read_32_sdio_88xx(struct halmac_adapter *halmac_adapter,
 	union {
 		u32 dword;
 		u8 byte[4];
+		__le32 le_dword;
 	} value32 = {0x00000000};
 
 	if (halmac_adapter_validate(halmac_adapter) != HALMAC_RET_SUCCESS)
@@ -439,7 +441,7 @@ u32 halmac_reg_read_32_sdio_88xx(struct halmac_adapter *halmac_adapter,
 							   halmac_offset + 2);
 		value32.byte[3] = PLATFORM_SDIO_CMD52_READ(driver_adapter,
 							   halmac_offset + 3);
-		value32.dword = le32_to_cpu(value32.dword);
+		value32.dword = le32_to_cpu(value32.le_dword);
 	} else {
 #if (PLATFORM_SD_CLK > HALMAC_SD_CLK_THRESHOLD_88XX)
 		if ((halmac_offset_old & 0xffffef00) == 0x00000000) {

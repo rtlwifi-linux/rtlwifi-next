@@ -397,6 +397,7 @@ halmac_download_firmware_88xx(struct halmac_adapter *halmac_adapter,
 	void *driver_adapter = NULL;
 	struct halmac_api *halmac_api;
 	struct halmac_restore_info restore_info[DLFW_RESTORE_REG_NUM_88XX];
+	u32 temp;
 
 	if (halmac_adapter_validate(halmac_adapter) != HALMAC_RET_SUCCESS)
 		return HALMAC_RET_ADAPTER_INVALID;
@@ -500,17 +501,14 @@ halmac_download_firmware_88xx(struct halmac_adapter *halmac_adapter,
 		*(hamacl_fw + HALMAC_FWHDR_OFFSET_SUBINDEX_88XX);
 	halmac_adapter->fw_version.h2c_version = (u16)fw_h2c_ver;
 
-	dmem_pkt_size =
-		*((u32 *)(hamacl_fw + HALMAC_FWHDR_OFFSET_DMEM_SIZE_88XX));
-	iram_pkt_size =
-		*((u32 *)(hamacl_fw + HALMAC_FWHDR_OFFSET_IRAM_SIZE_88XX));
+	dmem_pkt_size = le32_to_cpu(*((__le32 *)(hamacl_fw +
+				      HALMAC_FWHDR_OFFSET_DMEM_SIZE_88XX)));
+	iram_pkt_size = le32_to_cpu(*((__le32 *)(hamacl_fw +
+				      HALMAC_FWHDR_OFFSET_IRAM_SIZE_88XX)));
 	if (((*(hamacl_fw + HALMAC_FWHDR_OFFSET_MEM_USAGE_88XX)) & BIT(4)) != 0)
-		eram_pkt_size = *((u32 *)(hamacl_fw +
-					  HALMAC_FWHDR_OFFSET_ERAM_SIZE_88XX));
-
-	dmem_pkt_size = le32_to_cpu(dmem_pkt_size);
-	iram_pkt_size = le32_to_cpu(iram_pkt_size);
-	eram_pkt_size = le32_to_cpu(eram_pkt_size);
+		eram_pkt_size =
+		     le32_to_cpu(*((__le32 *)(hamacl_fw +
+				   HALMAC_FWHDR_OFFSET_ERAM_SIZE_88XX)));
 
 	dmem_pkt_size += HALMAC_FW_CHKSUM_DUMMY_SIZE_88XX;
 	iram_pkt_size += HALMAC_FW_CHKSUM_DUMMY_SIZE_88XX;
@@ -575,34 +573,29 @@ halmac_download_firmware_88xx(struct halmac_adapter *halmac_adapter,
 
 	/* Download to DMEM */
 	file_ptr = hamacl_fw + HALMAC_FWHDR_SIZE_88XX;
-	if (halmac_dlfw_to_mem_88xx(
-		    halmac_adapter, file_ptr,
-		    le32_to_cpu(
-			    (*((u32 *)(hamacl_fw +
-				       HALMAC_FWHDR_OFFSET_DMEM_ADDR_88XX))) &
-			    ~(BIT(31))),
-		    dmem_pkt_size) != HALMAC_RET_SUCCESS)
+	temp = le32_to_cpu(*((__le32 *)(hamacl_fw +
+			   HALMAC_FWHDR_OFFSET_DMEM_ADDR_88XX))) &
+			   ~(BIT(31));
+	if (halmac_dlfw_to_mem_88xx(halmac_adapter, file_ptr, temp,
+				    dmem_pkt_size) != HALMAC_RET_SUCCESS)
 		goto DLFW_END;
 
 	/* Download to IMEM */
 	file_ptr = hamacl_fw + HALMAC_FWHDR_SIZE_88XX + dmem_pkt_size;
-	if (halmac_dlfw_to_mem_88xx(
-		    halmac_adapter, file_ptr,
-		    le32_to_cpu(
-			    (*((u32 *)(hamacl_fw +
-				       HALMAC_FWHDR_OFFSET_IRAM_ADDR_88XX))) &
-			    ~(BIT(31))),
-		    iram_pkt_size) != HALMAC_RET_SUCCESS)
+	temp = le32_to_cpu(*((__le32 *)(hamacl_fw +
+			   HALMAC_FWHDR_OFFSET_IRAM_ADDR_88XX))) &
+			   ~(BIT(31));
+	if (halmac_dlfw_to_mem_88xx(halmac_adapter, file_ptr, temp,
+				    iram_pkt_size) != HALMAC_RET_SUCCESS)
 		goto DLFW_END;
 
 	/* Download to EMEM */
 	if (eram_pkt_size != 0) {
 		file_ptr = hamacl_fw + HALMAC_FWHDR_SIZE_88XX + dmem_pkt_size +
 			   iram_pkt_size;
-		dest = le32_to_cpu(
-			(*((u32 *)(hamacl_fw +
-				   HALMAC_FWHDR_OFFSET_EMEM_ADDR_88XX))) &
-			~(BIT(31)));
+		dest = le32_to_cpu((*((__le32 *)(hamacl_fw +
+				    HALMAC_FWHDR_OFFSET_EMEM_ADDR_88XX)))) &
+				   ~(BIT(31));
 		if (halmac_dlfw_to_mem_88xx(halmac_adapter, file_ptr, dest,
 					    eram_pkt_size) !=
 		    HALMAC_RET_SUCCESS)
@@ -683,16 +676,15 @@ halmac_free_download_firmware_88xx(struct halmac_adapter *halmac_adapter,
 	}
 
 	dmem_pkt_size =
-		*((u32 *)(hamacl_fw + HALMAC_FWHDR_OFFSET_DMEM_SIZE_88XX));
+	    le32_to_cpu(*(__le32 *)(hamacl_fw +
+				    HALMAC_FWHDR_OFFSET_DMEM_SIZE_88XX));
 	iram_pkt_size =
-		*((u32 *)(hamacl_fw + HALMAC_FWHDR_OFFSET_IRAM_SIZE_88XX));
+	    le32_to_cpu(*(__le32 *)(hamacl_fw +
+				    HALMAC_FWHDR_OFFSET_IRAM_SIZE_88XX));
 	if (((*(hamacl_fw + HALMAC_FWHDR_OFFSET_MEM_USAGE_88XX)) & BIT(4)) != 0)
-		eram_pkt_size = *((u32 *)(hamacl_fw +
+		eram_pkt_size =
+		  le32_to_cpu(*(__le32 *)(hamacl_fw +
 					  HALMAC_FWHDR_OFFSET_ERAM_SIZE_88XX));
-
-	dmem_pkt_size = le32_to_cpu(dmem_pkt_size);
-	iram_pkt_size = le32_to_cpu(iram_pkt_size);
-	eram_pkt_size = le32_to_cpu(eram_pkt_size);
 
 	dmem_pkt_size += HALMAC_FW_CHKSUM_DUMMY_SIZE_88XX;
 	iram_pkt_size += HALMAC_FW_CHKSUM_DUMMY_SIZE_88XX;
@@ -718,10 +710,9 @@ halmac_free_download_firmware_88xx(struct halmac_adapter *halmac_adapter,
 	if (eram_pkt_size != 0) {
 		file_ptr = hamacl_fw + HALMAC_FWHDR_SIZE_88XX + dmem_pkt_size +
 			   iram_pkt_size;
-		dest = le32_to_cpu(
-			(*((u32 *)(hamacl_fw +
+		dest = le32_to_cpu(*((__le32 *)(hamacl_fw +
 				   HALMAC_FWHDR_OFFSET_EMEM_ADDR_88XX))) &
-			~(BIT(31)));
+				   ~(BIT(31));
 		status = halmac_dlfw_to_mem_88xx(halmac_adapter, file_ptr, dest,
 						 eram_pkt_size);
 		if (status != HALMAC_RET_SUCCESS)
@@ -803,11 +794,8 @@ halmac_cfg_mac_addr_88xx(struct halmac_adapter *halmac_adapter, u8 halmac_port,
 		return HALMAC_RET_PORT_NOT_SUPPORT;
 	}
 
-	mac_address_L = hal_address->address_l_h.address_low;
-	mac_address_H = hal_address->address_l_h.address_high;
-
-	mac_address_L = le32_to_cpu(mac_address_L);
-	mac_address_H = le16_to_cpu(mac_address_H);
+	mac_address_L = le32_to_cpu(hal_address->address_l_h.le_address_low);
+	mac_address_H = le16_to_cpu(hal_address->address_l_h.le_address_high);
 
 	halmac_adapter->hal_mac_addr[halmac_port].address_l_h.address_low =
 		mac_address_L;
@@ -892,11 +880,8 @@ halmac_cfg_bssid_88xx(struct halmac_adapter *halmac_adapter, u8 halmac_port,
 		return HALMAC_RET_PORT_NOT_SUPPORT;
 	}
 
-	bssid_address_L = hal_address->address_l_h.address_low;
-	bssid_address_H = hal_address->address_l_h.address_high;
-
-	bssid_address_L = le32_to_cpu(bssid_address_L);
-	bssid_address_H = le16_to_cpu(bssid_address_H);
+	bssid_address_L = le32_to_cpu(hal_address->address_l_h.le_address_low);
+	bssid_address_H = le16_to_cpu(hal_address->address_l_h.le_address_high);
 
 	halmac_adapter->hal_bss_addr[halmac_port].address_l_h.address_low =
 		bssid_address_L;
@@ -981,11 +966,8 @@ halmac_cfg_multicast_addr_88xx(struct halmac_adapter *halmac_adapter,
 	HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_DMESG,
 			"halmac_cfg_multicast_addr_88xx ==========>\n");
 
-	address_L = hal_address->address_l_h.address_low;
-	address_H = hal_address->address_l_h.address_high;
-
-	address_L = le32_to_cpu(address_L);
-	address_H = le16_to_cpu(address_H);
+	address_L = le32_to_cpu(hal_address->address_l_h.le_address_low);
+	address_H = le16_to_cpu(hal_address->address_l_h.le_address_high);
 
 	HALMAC_REG_WRITE_32(halmac_adapter, REG_MAR, address_L);
 	HALMAC_REG_WRITE_16(halmac_adapter, REG_MAR + 4, address_H);
@@ -3894,10 +3876,10 @@ halmac_su_bfer_entry_init_88xx(struct halmac_adapter *halmac_adapter,
 	/* mac_address_L = bfer_address.address_l_h.address_low; */
 	/* mac_address_H = bfer_address.address_l_h.address_high; */
 
-	mac_address_L =
-		le32_to_cpu(su_bfer_init->bfer_address.address_l_h.address_low);
+	mac_address_L = le32_to_cpu(
+		su_bfer_init->bfer_address.address_l_h.le_address_low);
 	mac_address_H = le16_to_cpu(
-		su_bfer_init->bfer_address.address_l_h.address_high);
+		su_bfer_init->bfer_address.address_l_h.le_address_high);
 
 	switch (su_bfer_init->userid) {
 	case 0:
@@ -4018,9 +4000,9 @@ halmac_mu_bfer_entry_init_88xx(struct halmac_adapter *halmac_adapter,
 	halmac_api = (struct halmac_api *)halmac_adapter->halmac_api;
 
 	mac_address_L =
-		le32_to_cpu(mu_bfer_init->bfer_address.address_l_h.address_low);
-	mac_address_H = le16_to_cpu(
-		mu_bfer_init->bfer_address.address_l_h.address_high);
+	    le32_to_cpu(mu_bfer_init->bfer_address.address_l_h.le_address_low);
+	mac_address_H =
+	    le16_to_cpu(mu_bfer_init->bfer_address.address_l_h.le_address_high);
 
 	HALMAC_REG_WRITE_32(halmac_adapter, REG_ASSOCIATED_BFMER0_INFO,
 			    mac_address_L);
