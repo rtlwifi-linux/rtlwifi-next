@@ -919,6 +919,11 @@ void rtl8822be_set_desc(struct ieee80211_hw *hw, u8 *pdesc, bool istx,
 					get_desc_address_from_queue_index(
 						q_idx),
 					ring->cur_tx_wp);
+				/* insert a read to wait for the write */
+				rtl_read_word(
+					rtlpriv,
+					get_desc_address_from_queue_index(
+					q_idx));
 
 			} else {
 				RT_TRACE(
