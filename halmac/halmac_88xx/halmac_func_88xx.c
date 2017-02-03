@@ -184,8 +184,7 @@ halmac_dump_efuse_88xx(struct halmac_adapter *halmac_adapter,
 	}
 
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_EFUSE, DBG_EMERG,
-				"halmac_read_efuse error = %x\n", status);
+		pr_err("halmac_read_efuse error = %x\n", status);
 		return status;
 	}
 
@@ -201,9 +200,7 @@ halmac_func_read_efuse_88xx(struct halmac_adapter *halmac_adapter, u32 offset,
 	driver_adapter = halmac_adapter->driver_adapter;
 
 	if (!efuse_map) {
-		HALMAC_RT_TRACE(halmac_adapter->driver_adapter,
-				HALMAC_MSG_EFUSE, DBG_EMERG,
-				"Malloc for dump efuse map error\n");
+		pr_err("Malloc for dump efuse map error\n");
 		return HALMAC_RET_NULL_POINTER;
 	}
 
@@ -254,9 +251,7 @@ halmac_read_hw_efuse_88xx(struct halmac_adapter *halmac_adapter, u32 offset,
 						   REG_EFUSE_CTRL);
 			counter--;
 			if (counter == 0) {
-				HALMAC_RT_TRACE(halmac_adapter->driver_adapter,
-						HALMAC_MSG_EFUSE, DBG_EMERG,
-						"HALMAC_RET_EFUSE_R_FAIL\n");
+				pr_err("HALMAC_RET_EFUSE_R_FAIL\n");
 				return HALMAC_RET_EFUSE_R_FAIL;
 			}
 		} while ((tmp32 & BIT_EF_FLAG) == 0);
@@ -282,18 +277,14 @@ halmac_dump_efuse_drv_88xx(struct halmac_adapter *halmac_adapter)
 	if (!halmac_adapter->hal_efuse_map) {
 		halmac_adapter->hal_efuse_map = kzalloc(efuse_size, GFP_KERNEL);
 		if (!halmac_adapter->hal_efuse_map) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_EFUSE, DBG_EMERG,
-				"[ERR]halmac allocate efuse map Fail!!\n");
+			pr_err("[ERR]halmac allocate efuse map Fail!!\n");
 			return HALMAC_RET_MALLOC_FAIL;
 		}
 	}
 
 	efuse_map = kzalloc(efuse_size, GFP_KERNEL);
 	if (!efuse_map) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_EFUSE, DBG_EMERG,
-			"[ERR]halmac allocate local efuse map Fail!!\n");
+		pr_err("[ERR]halmac allocate local efuse map Fail!!\n");
 		return HALMAC_RET_MALLOC_FAIL;
 	}
 
@@ -335,9 +326,7 @@ halmac_dump_efuse_fw_88xx(struct halmac_adapter *halmac_adapter)
 		halmac_adapter->hal_efuse_map = kzalloc(
 			halmac_adapter->hw_config_info.efuse_size, GFP_KERNEL);
 		if (!halmac_adapter->hal_efuse_map) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C,
-					DBG_EMERG,
-					"halmac allocate efuse map Fail!!\n");
+			pr_err("halmac allocate efuse map Fail!!\n");
 			return HALMAC_RET_MALLOC_FAIL;
 		}
 	}
@@ -347,9 +336,7 @@ halmac_dump_efuse_fw_88xx(struct halmac_adapter *halmac_adapter)
 						  HALMAC_H2C_CMD_SIZE_88XX,
 						  true);
 		if (status != HALMAC_RET_SUCCESS) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"halmac_read_efuse_fw Fail = %x!!\n", status);
+			pr_err("halmac_read_efuse_fw Fail = %x!!\n", status);
 			return status;
 		}
 	}
@@ -397,9 +384,7 @@ halmac_func_write_efuse_88xx(struct halmac_adapter *halmac_adapter, u32 offset,
 		tmp32 = HALMAC_REG_READ_32(halmac_adapter, REG_EFUSE_CTRL);
 		counter--;
 		if (counter == 0) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C,
-					DBG_EMERG,
-					"halmac_write_efuse Fail !!\n");
+			pr_err("halmac_write_efuse Fail !!\n");
 			return HALMAC_RET_EFUSE_W_FAIL;
 		}
 	} while ((tmp32 & BIT_EF_FLAG) == BIT_EF_FLAG);
@@ -497,24 +482,15 @@ halmac_eeprom_parser_88xx(struct halmac_adapter *halmac_adapter,
 			eeprom_index = (block_index << 3) + (j << 1);
 
 			if ((eeprom_index + 1) > eeprom_size) {
-				HALMAC_RT_TRACE(
-					driver_adapter, HALMAC_MSG_EFUSE,
-					DBG_EMERG,
-					"Error: EEPROM addr exceeds eeprom_size:0x%X, at eFuse 0x%X\n",
-					eeprom_size, efuse_index - 1);
+				pr_err("Error: EEPROM addr exceeds eeprom_size:0x%X, at eFuse 0x%X\n",
+				       eeprom_size, efuse_index - 1);
 				if ((efuse_read_header & 0x1f) == 0x0f)
-					HALMAC_RT_TRACE(
-						driver_adapter,
-						HALMAC_MSG_EFUSE, DBG_EMERG,
-						"Error: EEPROM header: 0x%X, 0x%X,\n",
-						efuse_read_header,
-						efuse_read_header2);
+					pr_err("Error: EEPROM header: 0x%X, 0x%X,\n",
+					       efuse_read_header,
+					       efuse_read_header2);
 				else
-					HALMAC_RT_TRACE(
-						driver_adapter,
-						HALMAC_MSG_EFUSE, DBG_EMERG,
-						"Error: EEPROM header: 0x%X,\n",
-						efuse_read_header);
+					pr_err("Error: EEPROM header: 0x%X,\n",
+					       efuse_read_header);
 
 				return HALMAC_RET_EEPROM_PARSING_FAIL;
 			}
@@ -562,18 +538,14 @@ halmac_read_logical_efuse_map_88xx(struct halmac_adapter *halmac_adapter,
 	if (!halmac_adapter->hal_efuse_map_valid) {
 		efuse_map = kzalloc(efuse_size, GFP_KERNEL);
 		if (!efuse_map) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_EFUSE, DBG_EMERG,
-				"[ERR]halmac allocate local efuse map Fail!!\n");
+			pr_err("[ERR]halmac allocate local efuse map Fail!!\n");
 			return HALMAC_RET_MALLOC_FAIL;
 		}
 
 		status = halmac_func_read_efuse_88xx(halmac_adapter, 0,
 						     efuse_size, efuse_map);
 		if (status != HALMAC_RET_SUCCESS) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_EFUSE, DBG_EMERG,
-				"[ERR]halmac_read_efuse error = %x\n", status);
+			pr_err("[ERR]halmac_read_efuse error = %x\n", status);
 			kfree(efuse_map);
 			return status;
 		}
@@ -582,10 +554,7 @@ halmac_read_logical_efuse_map_88xx(struct halmac_adapter *halmac_adapter,
 			halmac_adapter->hal_efuse_map =
 				kzalloc(efuse_size, GFP_KERNEL);
 			if (!halmac_adapter->hal_efuse_map) {
-				HALMAC_RT_TRACE(
-					driver_adapter, HALMAC_MSG_EFUSE,
-					DBG_EMERG,
-					"[ERR]halmac allocate efuse map Fail!!\n");
+				pr_err("[ERR]halmac allocate efuse map Fail!!\n");
 				kfree(efuse_map);
 				return HALMAC_RET_MALLOC_FAIL;
 			}
@@ -624,19 +593,15 @@ halmac_func_write_logical_efuse_88xx(struct halmac_adapter *halmac_adapter,
 
 	eeprom_map = kzalloc(eeprom_size, GFP_KERNEL);
 	if (!eeprom_map) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_EFUSE, DBG_EMERG,
-			"[ERR]halmac allocate local eeprom map Fail!!\n");
+		pr_err("[ERR]halmac allocate local eeprom map Fail!!\n");
 		return HALMAC_RET_MALLOC_FAIL;
 	}
 	memset(eeprom_map, 0xFF, eeprom_size);
 
 	status = halmac_read_logical_efuse_map_88xx(halmac_adapter, eeprom_map);
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_EFUSE, DBG_EMERG,
-			"[ERR]halmac_read_logical_efuse_map_88xx error = %x\n",
-			status);
+		pr_err("[ERR]halmac_read_logical_efuse_map_88xx error = %x\n",
+		       status);
 		kfree(eeprom_map);
 		return status;
 	}
@@ -700,10 +665,8 @@ halmac_func_write_logical_efuse_88xx(struct halmac_adapter *halmac_adapter,
 		}
 
 		if (status != HALMAC_RET_SUCCESS) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_EFUSE, DBG_EMERG,
-				"[ERR]halmac_write_logical_efuse error = %x\n",
-				status);
+			pr_err("[ERR]halmac_write_logical_efuse error = %x\n",
+			       status);
 			kfree(eeprom_map);
 			return status;
 		}
@@ -721,14 +684,11 @@ halmac_func_pg_efuse_by_map_88xx(struct halmac_adapter *halmac_adapter,
 {
 	u8 *eeprom_mask_updated = NULL;
 	u32 eeprom_mask_size = halmac_adapter->hw_config_info.eeprom_size >> 4;
-	void *driver_adapter = NULL;
 	enum halmac_ret_status status = HALMAC_RET_SUCCESS;
 
 	eeprom_mask_updated = kzalloc(eeprom_mask_size, GFP_KERNEL);
 	if (!eeprom_mask_updated) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_EFUSE, DBG_EMERG,
-			"[ERR]halmac allocate local eeprom map Fail!!\n");
+		pr_err("[ERR]halmac allocate local eeprom map Fail!!\n");
 		return HALMAC_RET_MALLOC_FAIL;
 	}
 	memset(eeprom_mask_updated, 0x00, eeprom_mask_size);
@@ -737,10 +697,8 @@ halmac_func_pg_efuse_by_map_88xx(struct halmac_adapter *halmac_adapter,
 						eeprom_mask_updated);
 
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_EFUSE, DBG_EMERG,
-			"[ERR]halmac_update_eeprom_mask_88xx error = %x\n",
-			status);
+		pr_err("[ERR]halmac_update_eeprom_mask_88xx error = %x\n",
+		       status);
 		kfree(eeprom_mask_updated);
 		return status;
 	}
@@ -749,10 +707,8 @@ halmac_func_pg_efuse_by_map_88xx(struct halmac_adapter *halmac_adapter,
 						eeprom_mask_updated);
 
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_EFUSE, DBG_EMERG,
-			"[ERR]halmac_check_efuse_enough_88xx error = %x\n",
-			status);
+		pr_err("[ERR]halmac_check_efuse_enough_88xx error = %x\n",
+		       status);
 		kfree(eeprom_mask_updated);
 		return status;
 	}
@@ -761,9 +717,8 @@ halmac_func_pg_efuse_by_map_88xx(struct halmac_adapter *halmac_adapter,
 					   eeprom_mask_updated);
 
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_EFUSE, DBG_EMERG,
-				"[ERR]halmac_program_efuse_88xx error = %x\n",
-				status);
+		pr_err("[ERR]halmac_program_efuse_88xx error = %x\n",
+		       status);
 		kfree(eeprom_mask_updated);
 		return status;
 	}
@@ -791,9 +746,7 @@ halmac_update_eeprom_mask_88xx(struct halmac_adapter *halmac_adapter,
 
 	eeprom_map = kzalloc(eeprom_size, GFP_KERNEL);
 	if (!eeprom_map) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_EFUSE, DBG_EMERG,
-			"[ERR]halmac allocate local eeprom map Fail!!\n");
+		pr_err("[ERR]halmac allocate local eeprom map Fail!!\n");
 		return HALMAC_RET_MALLOC_FAIL;
 	}
 	memset(eeprom_map, 0xFF, eeprom_size);
@@ -1085,9 +1038,7 @@ halmac_dlfw_to_mem_88xx(struct halmac_adapter *halmac_adapter, u8 *ram_code,
 		if (halmac_send_fwpkt_88xx(
 			    halmac_adapter, code_ptr + mem_offset,
 			    send_pkt_size) != HALMAC_RET_SUCCESS) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
-					DBG_EMERG,
-					"halmac_send_fwpkt_88xx fail!!");
+			pr_err("halmac_send_fwpkt_88xx fail!!");
 			return HALMAC_RET_DLFW_FAIL;
 		}
 
@@ -1097,9 +1048,7 @@ halmac_dlfw_to_mem_88xx(struct halmac_adapter *halmac_adapter, u8 *ram_code,
 				    halmac_adapter->hw_config_info.txdesc_size,
 			    dest + mem_offset, send_pkt_size,
 			    first_part) != HALMAC_RET_SUCCESS) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
-					DBG_EMERG,
-					"halmac_iddma_dlfw_88xx fail!!");
+			pr_err("halmac_iddma_dlfw_88xx fail!!");
 			return HALMAC_RET_DLFW_FAIL;
 		}
 
@@ -1110,8 +1059,7 @@ halmac_dlfw_to_mem_88xx(struct halmac_adapter *halmac_adapter, u8 *ram_code,
 
 	if (halmac_check_fw_chksum_88xx(halmac_adapter, dest) !=
 	    HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"halmac_check_fw_chksum_88xx fail!!");
+		pr_err("halmac_check_fw_chksum_88xx fail!!");
 		return HALMAC_RET_DLFW_FAIL;
 	}
 
@@ -1122,12 +1070,9 @@ enum halmac_ret_status
 halmac_send_fwpkt_88xx(struct halmac_adapter *halmac_adapter, u8 *ram_code,
 		       u32 code_size)
 {
-	void *driver_adapter = halmac_adapter->driver_adapter;
-
 	if (halmac_download_rsvd_page_88xx(halmac_adapter, ram_code,
 					   code_size) != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_FW, DBG_EMERG,
-				"PLATFORM_SEND_RSVD_PAGE 0 error!!\n");
+		pr_err("PLATFORM_SEND_RSVD_PAGE 0 error!!\n");
 		return HALMAC_RET_DL_RSVD_PAGE_FAIL;
 	}
 
@@ -1151,9 +1096,7 @@ halmac_iddma_dlfw_88xx(struct halmac_adapter *halmac_adapter, u32 source,
 	       BIT_DDMACH0_OWN) {
 		counter--;
 		if (counter == 0) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_FW,
-					DBG_EMERG,
-					"halmac_iddma_dlfw_88xx error-1!!\n");
+			pr_err("halmac_iddma_dlfw_88xx error-1!!\n");
 			return HALMAC_RET_DDMA_FAIL;
 		}
 	}
@@ -1171,9 +1114,7 @@ halmac_iddma_dlfw_88xx(struct halmac_adapter *halmac_adapter, u32 source,
 	       BIT_DDMACH0_OWN) {
 		counter--;
 		if (counter == 0) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_FW,
-					DBG_EMERG,
-					"halmac_iddma_dlfw_88xx error-2!!\n");
+			pr_err("halmac_iddma_dlfw_88xx error-2!!\n");
 			return HALMAC_RET_DDMA_FAIL;
 		}
 	}
@@ -1209,8 +1150,7 @@ halmac_check_fw_chksum_88xx(struct halmac_adapter *halmac_adapter,
 				(u8)(mcu_fw_ctrl & ~(BIT_DMEM_CHKSUM_OK)));
 		}
 
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_FW, DBG_EMERG,
-				"halmac_check_fw_chksum_88xx error!!\n");
+		pr_err("halmac_check_fw_chksum_88xx error!!\n");
 
 		status = HALMAC_RET_FW_CHECKSUM_FAIL;
 	} else {
@@ -1274,13 +1214,10 @@ halmac_dlfw_end_flow_88xx(struct halmac_adapter *halmac_adapter)
 	counter = 10000;
 	while (HALMAC_REG_READ_16(halmac_adapter, REG_MCUFW_CTRL) != 0xC078) {
 		if (counter == 0) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
-					DBG_EMERG,
-					"Check 0x80 = 0xC078 fail\n");
+			pr_err("Check 0x80 = 0xC078 fail\n");
 			if ((HALMAC_REG_READ_32(halmac_adapter, REG_FW_DBG7) &
 			     0xFFFFFF00) == 0xFAAAAA00)
-				HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
-						DBG_EMERG, "Key fail\n");
+				pr_err("Key fail\n");
 			return HALMAC_RET_DLFW_FAIL;
 		}
 		counter--;
@@ -1297,7 +1234,6 @@ enum halmac_ret_status
 halmac_free_dl_fw_end_flow_88xx(struct halmac_adapter *halmac_adapter)
 {
 	u32 counter;
-	void *driver_adapter = halmac_adapter->driver_adapter;
 	struct halmac_api *halmac_api =
 		(struct halmac_api *)halmac_adapter->halmac_api;
 
@@ -1305,8 +1241,7 @@ halmac_free_dl_fw_end_flow_88xx(struct halmac_adapter *halmac_adapter)
 	while (HALMAC_REG_READ_8(halmac_adapter, REG_HMETFR + 3) != 0) {
 		counter--;
 		if (counter == 0) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
-					DBG_EMERG, "[ERR]0x1CF != 0\n");
+			pr_err("[ERR]0x1CF != 0\n");
 			return HALMAC_RET_DLFW_FAIL;
 		}
 		udelay(50);
@@ -1320,8 +1255,7 @@ halmac_free_dl_fw_end_flow_88xx(struct halmac_adapter *halmac_adapter)
 	       ID_INFORM_DLEMEM_RDY) {
 		counter--;
 		if (counter == 0) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
-					DBG_EMERG, "[ERR]0x1AF != 0x80\n");
+			pr_err("[ERR]0x1AF != 0x80\n");
 			return HALMAC_RET_DLFW_FAIL;
 		}
 		udelay(50);
@@ -1353,10 +1287,8 @@ halmac_pwr_seq_parser_88xx(struct halmac_adapter *halmac_adapter, u8 cut,
 		status = halmac_pwr_sub_seq_parer_88xx(halmac_adapter, cut, fab,
 						       intf, seq_cmd);
 		if (status != HALMAC_RET_SUCCESS) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"[Err]pwr sub seq parser fail, status = 0x%X!\n",
-				status);
+			pr_err("[Err]pwr sub seq parser fail, status = 0x%X!\n",
+			       status);
 			return status;
 		}
 
@@ -1449,27 +1381,15 @@ halmac_pwr_sub_seq_parer_do_cmd_88xx(struct halmac_adapter *halmac_adapter,
 					HALMAC_POLLING_READY_TIMEOUT_COUNT;
 				flag = 1;
 			} else {
-				HALMAC_RT_TRACE(
-					driver_adapter, HALMAC_MSG_PWR,
-					DBG_EMERG,
-					"[ERR]Pwr cmd polling timeout!!\n");
-				HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_PWR,
-						DBG_EMERG,
-						"[ERR]Pwr cmd offset : %X!!\n",
-						sub_seq_cmd->offset);
-				HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_PWR,
-						DBG_EMERG,
-						"[ERR]Pwr cmd value : %X!!\n",
-						sub_seq_cmd->value);
-				HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_PWR,
-						DBG_EMERG,
-						"[ERR]Pwr cmd msk : %X!!\n",
-						sub_seq_cmd->msk);
-				HALMAC_RT_TRACE(
-					driver_adapter, HALMAC_MSG_PWR,
-					DBG_EMERG,
-					"[ERR]Read offset = %X value = %X!!\n",
-					offset, value);
+				pr_err("[ERR]Pwr cmd polling timeout!!\n");
+				pr_err("[ERR]Pwr cmd offset : %X!!\n",
+				       sub_seq_cmd->offset);
+				pr_err("[ERR]Pwr cmd value : %X!!\n",
+				       sub_seq_cmd->value);
+				pr_err("[ERR]Pwr cmd msk : %X!!\n",
+				       sub_seq_cmd->msk);
+				pr_err("[ERR]Read offset = %X value = %X!!\n",
+				       offset, value);
 				return HALMAC_RET_PWRSEQ_POLLING_FAIL;
 			}
 		} while (!polling_bit);
@@ -1551,17 +1471,14 @@ halmac_send_h2c_pkt_88xx(struct halmac_adapter *halmac_adapter, u8 *hal_h2c_cmd,
 		halmac_get_h2c_buff_free_space_88xx(halmac_adapter);
 		counter--;
 		if (counter == 0) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C,
-					DBG_EMERG,
-					"h2c free space is not enough!!\n");
+			pr_err("h2c free space is not enough!!\n");
 			return HALMAC_RET_H2C_SPACE_FULL;
 		}
 	}
 
 	/* Send TxDesc + H2C_CMD */
 	if (!PLATFORM_SEND_H2C_PKT(driver_adapter, hal_h2c_cmd, size)) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"Send H2C_CMD pkt error!!\n");
+		pr_err("Send H2C_CMD pkt error!!\n");
 		return HALMAC_RET_SEND_H2C_FAIL;
 	}
 
@@ -1614,8 +1531,7 @@ halmac_download_rsvd_page_88xx(struct halmac_adapter *halmac_adapter,
 	HALMAC_REG_WRITE_8(halmac_adapter, REG_FWHW_TXQ_CTRL + 2, value8);
 
 	if (!PLATFORM_SEND_RSVD_PAGE(driver_adapter, hal_buf, size)) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"PLATFORM_SEND_RSVD_PAGE 1 error!!\n");
+		pr_err("PLATFORM_SEND_RSVD_PAGE 1 error!!\n");
 		status = HALMAC_RET_DL_RSVD_PAGE_FAIL;
 	}
 
@@ -1626,9 +1542,7 @@ halmac_download_rsvd_page_88xx(struct halmac_adapter *halmac_adapter,
 		udelay(10);
 		counter--;
 		if (counter == 0) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C,
-					DBG_EMERG,
-					"Polling Bcn_Valid_Fail error!!\n");
+			pr_err("Polling Bcn_Valid_Fail error!!\n");
 			status = HALMAC_RET_POLLING_BCN_VALID_FAIL;
 			break;
 		}
@@ -1749,10 +1663,8 @@ halmac_send_h2c_set_pwr_mode_88xx(struct halmac_adapter *halmac_adapter,
 					  HALMAC_H2C_CMD_SIZE_88XX, true);
 
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-			"halmac_send_h2c_set_pwr_mode_88xx Fail = %x!!\n",
-			status);
+		pr_err("halmac_send_h2c_set_pwr_mode_88xx Fail = %x!!\n",
+		       status);
 		return status;
 	}
 
@@ -1785,9 +1697,8 @@ halmac_func_send_original_h2c_88xx(struct halmac_adapter *halmac_adapter,
 					  HALMAC_H2C_CMD_SIZE_88XX, ack);
 
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"halmac_send_original_h2c Fail = %x!!\n",
-				status);
+		pr_err("halmac_send_original_h2c Fail = %x!!\n",
+		       status);
 		return status;
 	}
 
@@ -1829,9 +1740,8 @@ halmac_media_status_rpt_88xx(struct halmac_adapter *halmac_adapter, u8 op_mode,
 					  HALMAC_H2C_CMD_SIZE_88XX, true);
 
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"halmac_media_status_rpt_88xx Fail = %x!!\n",
-				status);
+		pr_err("halmac_media_status_rpt_88xx Fail = %x!!\n",
+		       status);
 		return status;
 	}
 
@@ -1862,9 +1772,8 @@ halmac_send_h2c_update_packet_88xx(struct halmac_adapter *halmac_adapter,
 		halmac_download_rsvd_page_88xx(halmac_adapter, pkt, pkt_size);
 
 	if (ret_status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"halmac_download_rsvd_page_88xx Fail = %x!!\n",
-				ret_status);
+		pr_err("halmac_download_rsvd_page_88xx Fail = %x!!\n",
+		       ret_status);
 		HALMAC_REG_WRITE_16(
 			halmac_adapter, REG_FIFOPAGE_CTRL_2,
 			(u16)(halmac_adapter->txff_allocation.rsvd_pg_bndy &
@@ -1896,10 +1805,8 @@ halmac_send_h2c_update_packet_88xx(struct halmac_adapter *halmac_adapter,
 					      HALMAC_H2C_CMD_SIZE_88XX, true);
 
 	if (ret_status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-			"halmac_send_h2c_update_packet_88xx Fail = %x!!\n",
-			ret_status);
+		pr_err("halmac_send_h2c_update_packet_88xx Fail = %x!!\n",
+		       ret_status);
 		return ret_status;
 	}
 
@@ -2019,8 +1926,7 @@ halmac_send_h2c_phy_parameter_88xx(struct halmac_adapter *halmac_adapter,
 		info_size);
 
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"halmac_download_rsvd_page_88xx Fail!!\n");
+		pr_err("halmac_download_rsvd_page_88xx Fail!!\n");
 	} else {
 		halmac_gen_cfg_para_h2c_88xx(halmac_adapter, h2c_buff);
 
@@ -2039,9 +1945,7 @@ halmac_send_h2c_phy_parameter_88xx(struct halmac_adapter *halmac_adapter,
 						  true);
 
 		if (status != HALMAC_RET_SUCCESS)
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C,
-					DBG_EMERG,
-					"halmac_send_h2c_pkt_88xx Fail!!\n");
+			pr_err("halmac_send_h2c_pkt_88xx Fail!!\n");
 
 		HALMAC_RT_TRACE(
 			driver_adapter, HALMAC_MSG_H2C, DBG_DMESG,
@@ -2077,7 +1981,6 @@ halmac_enqueue_para_buff_88xx(struct halmac_adapter *halmac_adapter,
 			      struct halmac_phy_parameter_info *para_info,
 			      u8 *curr_buff_wptr, bool *end_cmd)
 {
-	void *driver_adapter = NULL;
 	struct halmac_config_para_info *config_para_info =
 		&halmac_adapter->config_para_info;
 
@@ -2135,9 +2038,7 @@ halmac_enqueue_para_buff_88xx(struct halmac_adapter *halmac_adapter,
 		*end_cmd = true;
 		break;
 	default:
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-			" halmac_send_h2c_phy_parameter_88xx illegal cmd_id!!\n");
+		pr_err(" halmac_send_h2c_phy_parameter_88xx illegal cmd_id!!\n");
 		break;
 	}
 
@@ -2195,9 +2096,8 @@ halmac_send_h2c_run_datapack_88xx(struct halmac_adapter *halmac_adapter,
 					  HALMAC_H2C_CMD_SIZE_88XX, true);
 
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"halmac_send_h2c_pkt_88xx Fail = %x!!\n",
-				status);
+		pr_err("halmac_send_h2c_pkt_88xx Fail = %x!!\n",
+		       status);
 		return status;
 	}
 
@@ -2231,9 +2131,8 @@ halmac_send_bt_coex_cmd_88xx(struct halmac_adapter *halmac_adapter, u8 *bt_buf,
 					  HALMAC_H2C_CMD_SIZE_88XX, ack);
 
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"halmac_send_h2c_pkt_88xx Fail = %x!!\n",
-				status);
+		pr_err("halmac_send_h2c_pkt_88xx Fail = %x!!\n",
+		       status);
 		return status;
 	}
 
@@ -2277,10 +2176,8 @@ halmac_func_ctrl_ch_switch_88xx(struct halmac_adapter *halmac_adapter,
 			halmac_adapter->ch_sw_info.total_size);
 
 		if (status != HALMAC_RET_SUCCESS) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"halmac_download_rsvd_page_88xx Fail = %x!!\n",
-				status);
+			pr_err("halmac_download_rsvd_page_88xx Fail = %x!!\n",
+			       status);
 			HALMAC_REG_WRITE_16(
 				halmac_adapter, REG_FIFOPAGE_CTRL_2,
 				(u16)(halmac_adapter->txff_allocation
@@ -2326,9 +2223,8 @@ halmac_func_ctrl_ch_switch_88xx(struct halmac_adapter *halmac_adapter,
 					  HALMAC_H2C_CMD_SIZE_88XX, true);
 
 	if (status != HALMAC_RET_SUCCESS)
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"halmac_send_h2c_pkt_88xx Fail = %x!!\n",
-				status);
+		pr_err("halmac_send_h2c_pkt_88xx Fail = %x!!\n",
+		       status);
 
 	kfree(halmac_adapter->ch_sw_info.ch_info_buf);
 	halmac_adapter->ch_sw_info.ch_info_buf = NULL;
@@ -2379,9 +2275,8 @@ halmac_func_send_general_info_88xx(struct halmac_adapter *halmac_adapter,
 					  HALMAC_H2C_CMD_SIZE_88XX, true);
 
 	if (status != HALMAC_RET_SUCCESS)
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"halmac_send_h2c_pkt_88xx Fail = %x!!\n",
-				status);
+		pr_err("halmac_send_h2c_pkt_88xx Fail = %x!!\n",
+		       status);
 
 	return status;
 }
@@ -2426,9 +2321,8 @@ enum halmac_ret_status halmac_send_h2c_update_bcn_parse_info_88xx(
 					  HALMAC_H2C_CMD_SIZE_88XX, true);
 
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"halmac_send_h2c_pkt_88xx Fail =%x !!\n",
-				status);
+		pr_err("halmac_send_h2c_pkt_88xx Fail =%x !!\n",
+		       status);
 		return status;
 	}
 
@@ -2458,9 +2352,8 @@ halmac_send_h2c_ps_tuning_para_88xx(struct halmac_adapter *halmac_adapter)
 					  HALMAC_H2C_CMD_SIZE_88XX, false);
 
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"halmac_send_h2c_pkt_88xx Fail = %x!!\n",
-				status);
+		pr_err("halmac_send_h2c_pkt_88xx Fail = %x!!\n",
+		       status);
 		return status;
 	}
 
@@ -2515,12 +2408,9 @@ halmac_parse_c2h_packet_88xx(struct halmac_adapter *halmac_adapter,
 						      c2h_size);
 		break;
 	default:
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-			"c2h_sub_cmd_id switch case out of boundary!!\n");
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"[ERR]c2h pkt : %.8X %.8X!!\n", *(u32 *)c2h_buf,
-				*(u32 *)(c2h_buf + 4));
+		pr_err("c2h_sub_cmd_id switch case out of boundary!!\n");
+		pr_err("[ERR]c2h pkt : %.8X %.8X!!\n", *(u32 *)c2h_buf,
+		       *(u32 *)(c2h_buf + 4));
 		status = HALMAC_RET_C2H_NOT_HANDLED;
 		break;
 	}
@@ -2599,16 +2489,13 @@ halmac_parse_psd_data_88xx(struct halmac_adapter *halmac_adapter, u8 *c2h_buf,
 			"[TRACE]Seq num : h2c -> %d c2h -> %d\n",
 			psd_set->seq_num, h2c_seq);
 	if (h2c_seq != psd_set->seq_num) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-			"[ERR]Seq num mismactch : h2c -> %d c2h -> %d\n",
-			psd_set->seq_num, h2c_seq);
+		pr_err("[ERR]Seq num mismactch : h2c -> %d c2h -> %d\n",
+		       psd_set->seq_num, h2c_seq);
 		return HALMAC_RET_SUCCESS;
 	}
 
 	if (psd_set->process_status != HALMAC_CMD_PROCESS_SENDING) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"[ERR]Not in HALMAC_CMD_PROCESS_SENDING\n");
+		pr_err("[ERR]Not in HALMAC_CMD_PROCESS_SENDING\n");
 		return HALMAC_RET_SUCCESS;
 	}
 
@@ -2656,18 +2543,15 @@ halmac_parse_efuse_data_88xx(struct halmac_adapter *halmac_adapter, u8 *c2h_buf,
 			halmac_adapter->halmac_state.efuse_state_set.seq_num,
 			h2c_seq);
 	if (h2c_seq != halmac_adapter->halmac_state.efuse_state_set.seq_num) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-			"[ERR]Seq num mismactch : h2c -> %d c2h -> %d\n",
-			halmac_adapter->halmac_state.efuse_state_set.seq_num,
-			h2c_seq);
+		pr_err("[ERR]Seq num mismactch : h2c -> %d c2h -> %d\n",
+		       halmac_adapter->halmac_state.efuse_state_set.seq_num,
+		       h2c_seq);
 		return HALMAC_RET_SUCCESS;
 	}
 
 	if (halmac_adapter->halmac_state.efuse_state_set.process_status !=
 	    HALMAC_CMD_PROCESS_SENDING) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"[ERR]Not in HALMAC_CMD_PROCESS_SENDING\n");
+		pr_err("[ERR]Not in HALMAC_CMD_PROCESS_SENDING\n");
 		return HALMAC_RET_SUCCESS;
 	}
 
@@ -2678,9 +2562,7 @@ halmac_parse_efuse_data_88xx(struct halmac_adapter *halmac_adapter, u8 *c2h_buf,
 
 	eeprom_map = kzalloc(eeprom_size, GFP_KERNEL);
 	if (!eeprom_map) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_EFUSE, DBG_EMERG,
-			"[ERR]halmac allocate local eeprom map Fail!!\n");
+		pr_err("[ERR]halmac allocate local eeprom map Fail!!\n");
 		return HALMAC_RET_MALLOC_FAIL;
 	}
 	memset(eeprom_map, 0xFF, eeprom_size);
@@ -2794,8 +2676,7 @@ halmac_parse_h2c_ack_88xx(struct halmac_adapter *halmac_adapter, u8 *c2h_buf,
 	h2c_cmd_id = (u8)H2C_ACK_HDR_GET_H2C_CMD_ID(c2h_buf);
 
 	if (h2c_cmd_id != 0xFF) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"original h2c ack is not handled!!\n");
+		pr_err("original h2c ack is not handled!!\n");
 		status = HALMAC_RET_C2H_NOT_HANDLED;
 	} else {
 		h2c_sub_cmd_id = (u8)H2C_ACK_HDR_GET_H2C_SUB_CMD_ID(c2h_buf);
@@ -2836,9 +2717,7 @@ halmac_parse_h2c_ack_88xx(struct halmac_adapter *halmac_adapter, u8 *c2h_buf,
 		case H2C_SUB_CMD_ID_PSD_ACK:
 			break;
 		default:
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"h2c_sub_cmd_id switch case out of boundary!!\n");
+			pr_err("h2c_sub_cmd_id switch case out of boundary!!\n");
 			status = HALMAC_RET_C2H_NOT_HANDLED;
 			break;
 		}
@@ -2861,18 +2740,15 @@ halmac_parse_h2c_ack_phy_efuse_88xx(struct halmac_adapter *halmac_adapter,
 			halmac_adapter->halmac_state.efuse_state_set.seq_num,
 			h2c_seq);
 	if (h2c_seq != halmac_adapter->halmac_state.efuse_state_set.seq_num) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-			"[ERR]Seq num mismactch : h2c -> %d c2h -> %d\n",
-			halmac_adapter->halmac_state.efuse_state_set.seq_num,
-			h2c_seq);
+		pr_err("[ERR]Seq num mismactch : h2c -> %d c2h -> %d\n",
+		       halmac_adapter->halmac_state.efuse_state_set.seq_num,
+		       h2c_seq);
 		return HALMAC_RET_SUCCESS;
 	}
 
 	if (halmac_adapter->halmac_state.efuse_state_set.process_status !=
 	    HALMAC_CMD_PROCESS_SENDING) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"[ERR]Not in HALMAC_CMD_PROCESS_SENDING\n");
+		pr_err("[ERR]Not in HALMAC_CMD_PROCESS_SENDING\n");
 		return HALMAC_RET_SUCCESS;
 	}
 
@@ -2901,18 +2777,15 @@ halmac_parse_h2c_ack_cfg_para_88xx(struct halmac_adapter *halmac_adapter,
 			h2c_seq);
 	if (h2c_seq !=
 	    halmac_adapter->halmac_state.cfg_para_state_set.seq_num) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-			"Seq num mismactch : h2c -> %d c2h -> %d\n",
-			halmac_adapter->halmac_state.cfg_para_state_set.seq_num,
-			h2c_seq);
+		pr_err("Seq num mismactch : h2c -> %d c2h -> %d\n",
+		       halmac_adapter->halmac_state.cfg_para_state_set.seq_num,
+		       h2c_seq);
 		return HALMAC_RET_SUCCESS;
 	}
 
 	if (halmac_adapter->halmac_state.cfg_para_state_set.process_status !=
 	    HALMAC_CMD_PROCESS_SENDING) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"Not in HALMAC_CMD_PROCESS_SENDING\n");
+		pr_err("Not in HALMAC_CMD_PROCESS_SENDING\n");
 		return HALMAC_RET_SUCCESS;
 	}
 
@@ -2926,14 +2799,11 @@ halmac_parse_h2c_ack_cfg_para_88xx(struct halmac_adapter *halmac_adapter,
 	     halmac_adapter->config_para_info.offset_accumulation) ||
 	    (value_accu !=
 	     halmac_adapter->config_para_info.value_accumulation)) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"[C2H]offset_accu : %x, value_accu : %x!!\n",
-				offset_accu, value_accu);
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-			"[Adapter]offset_accu : %x, value_accu : %x!!\n",
-			halmac_adapter->config_para_info.offset_accumulation,
-			halmac_adapter->config_para_info.value_accumulation);
+		pr_err("[C2H]offset_accu : %x, value_accu : %x!!\n",
+		       offset_accu, value_accu);
+		pr_err("[Adapter]offset_accu : %x, value_accu : %x!!\n",
+		       halmac_adapter->config_para_info.offset_accumulation,
+		       halmac_adapter->config_para_info.value_accumulation);
 		process_status = HALMAC_CMD_PROCESS_ERROR;
 	}
 
@@ -2975,18 +2845,15 @@ halmac_parse_h2c_ack_update_packet_88xx(struct halmac_adapter *halmac_adapter,
 			halmac_adapter->halmac_state.update_packet_set.seq_num,
 			h2c_seq);
 	if (h2c_seq != halmac_adapter->halmac_state.update_packet_set.seq_num) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-			"[ERR]Seq num mismactch : h2c -> %d c2h -> %d\n",
-			halmac_adapter->halmac_state.update_packet_set.seq_num,
-			h2c_seq);
+		pr_err("[ERR]Seq num mismactch : h2c -> %d c2h -> %d\n",
+		       halmac_adapter->halmac_state.update_packet_set.seq_num,
+		       h2c_seq);
 		return HALMAC_RET_SUCCESS;
 	}
 
 	if (halmac_adapter->halmac_state.update_packet_set.process_status !=
 	    HALMAC_CMD_PROCESS_SENDING) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"[ERR]Not in HALMAC_CMD_PROCESS_SENDING\n");
+		pr_err("[ERR]Not in HALMAC_CMD_PROCESS_SENDING\n");
 		return HALMAC_RET_SUCCESS;
 	}
 
@@ -3061,18 +2928,15 @@ halmac_parse_h2c_ack_channel_switch_88xx(struct halmac_adapter *halmac_adapter,
 			halmac_adapter->halmac_state.scan_state_set.seq_num,
 			h2c_seq);
 	if (h2c_seq != halmac_adapter->halmac_state.scan_state_set.seq_num) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-			"[ERR]Seq num mismactch : h2c -> %d c2h -> %d\n",
-			halmac_adapter->halmac_state.scan_state_set.seq_num,
-			h2c_seq);
+		pr_err("[ERR]Seq num mismactch : h2c -> %d c2h -> %d\n",
+		       halmac_adapter->halmac_state.scan_state_set.seq_num,
+		       h2c_seq);
 		return HALMAC_RET_SUCCESS;
 	}
 
 	if (halmac_adapter->halmac_state.scan_state_set.process_status !=
 	    HALMAC_CMD_PROCESS_SENDING) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"[ERR]Not in HALMAC_CMD_PROCESS_SENDING\n");
+		pr_err("[ERR]Not in HALMAC_CMD_PROCESS_SENDING\n");
 		return HALMAC_RET_SUCCESS;
 	}
 
@@ -3116,17 +2980,14 @@ halmac_parse_h2c_ack_iqk_88xx(struct halmac_adapter *halmac_adapter,
 			"[TRACE]Seq num : h2c -> %d c2h -> %d\n",
 			halmac_adapter->halmac_state.iqk_set.seq_num, h2c_seq);
 	if (h2c_seq != halmac_adapter->halmac_state.iqk_set.seq_num) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-			"[ERR]Seq num mismactch : h2c -> %d c2h -> %d\n",
-			halmac_adapter->halmac_state.iqk_set.seq_num, h2c_seq);
+		pr_err("[ERR]Seq num mismactch : h2c -> %d c2h -> %d\n",
+		       halmac_adapter->halmac_state.iqk_set.seq_num, h2c_seq);
 		return HALMAC_RET_SUCCESS;
 	}
 
 	if (halmac_adapter->halmac_state.iqk_set.process_status !=
 	    HALMAC_CMD_PROCESS_SENDING) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"[ERR]Not in HALMAC_CMD_PROCESS_SENDING\n");
+		pr_err("[ERR]Not in HALMAC_CMD_PROCESS_SENDING\n");
 		return HALMAC_RET_SUCCESS;
 	}
 
@@ -3169,18 +3030,15 @@ halmac_parse_h2c_ack_power_tracking_88xx(struct halmac_adapter *halmac_adapter,
 			h2c_seq);
 	if (h2c_seq !=
 	    halmac_adapter->halmac_state.power_tracking_set.seq_num) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-			"[ERR]Seq num mismactch : h2c -> %d c2h -> %d\n",
-			halmac_adapter->halmac_state.power_tracking_set.seq_num,
-			h2c_seq);
+		pr_err("[ERR]Seq num mismactch : h2c -> %d c2h -> %d\n",
+		       halmac_adapter->halmac_state.power_tracking_set.seq_num,
+		       h2c_seq);
 		return HALMAC_RET_SUCCESS;
 	}
 
 	if (halmac_adapter->halmac_state.power_tracking_set.process_status !=
 	    HALMAC_CMD_PROCESS_SENDING) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"[ERR]Not in HALMAC_CMD_PROCESS_SENDING\n");
+		pr_err("[ERR]Not in HALMAC_CMD_PROCESS_SENDING\n");
 		return HALMAC_RET_SUCCESS;
 	}
 
@@ -3230,8 +3088,7 @@ halmac_convert_to_sdio_bus_offset_88xx(struct halmac_adapter *halmac_adapter,
 		break;
 	default:
 		*halmac_offset = 0xFFFFFFFF;
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"Unknown base address!!\n");
+		pr_err("Unknown base address!!\n");
 		return HALMAC_RET_CONVERT_SDIO_OFFSET_FAIL;
 	}
 
@@ -3511,9 +3368,7 @@ enum halmac_ret_status halmac_query_dump_logical_efuse_status_88xx(
 
 		eeprom_map = kzalloc(eeprom_size, GFP_KERNEL);
 		if (!eeprom_map) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_EFUSE, DBG_EMERG,
-				"[ERR]halmac allocate local eeprom map Fail!!\n");
+			pr_err("[ERR]halmac allocate local eeprom map Fail!!\n");
 			return HALMAC_RET_MALLOC_FAIL;
 		}
 		memset(eeprom_map, 0xFF, eeprom_size);
@@ -3643,10 +3498,8 @@ halmac_verify_io_88xx(struct halmac_adapter *halmac_adapter)
 			PLATFORM_SDIO_CMD52_READ(driver_adapter, halmac_offset);
 
 		if (value8 != wvalue8) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
-					DBG_EMERG,
-					"cmd52 r/w fail write = %X read = %X\n",
-					wvalue8, value8);
+			pr_err("cmd52 r/w fail write = %X read = %X\n",
+			       wvalue8, value8);
 			ret_status = HALMAC_RET_PLATFORM_API_INCORRECT;
 		} else {
 			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
@@ -3666,9 +3519,7 @@ halmac_verify_io_88xx(struct halmac_adapter *halmac_adapter)
 						      halmac_offset);
 
 		if (value32 != 0xddccbbaa) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
-					DBG_EMERG, "cmd53 r fail : read = %X\n",
-					value32);
+			pr_err("cmd53 r fail : read = %X\n", value32);
 			ret_status = HALMAC_RET_PLATFORM_API_INCORRECT;
 		} else {
 			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
@@ -3683,8 +3534,7 @@ halmac_verify_io_88xx(struct halmac_adapter *halmac_adapter)
 						      halmac_offset);
 
 		if (value32 != wvalue32) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
-					DBG_EMERG, "cmd53 w fail\n");
+			pr_err("cmd53 w fail\n");
 			ret_status = HALMAC_RET_PLATFORM_API_INCORRECT;
 		} else {
 			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
@@ -3703,9 +3553,7 @@ halmac_verify_io_88xx(struct halmac_adapter *halmac_adapter)
 			driver_adapter,
 			halmac_offset + 2); /* value32 should be 0x55661122 */
 		if (value32_2 == value32) {
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"cmd52 is used for HAL_SDIO_CMD53_READ_32\n");
+			pr_err("cmd52 is used for HAL_SDIO_CMD53_READ_32\n");
 			ret_status = HALMAC_RET_PLATFORM_API_INCORRECT;
 		} else {
 			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
@@ -3718,8 +3566,7 @@ halmac_verify_io_88xx(struct halmac_adapter *halmac_adapter)
 
 		value32 = PLATFORM_REG_READ_32(driver_adapter, REG_PAGE5_DUMMY);
 		if (value32 != wvalue32) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
-					DBG_EMERG, "reg rw\n");
+			pr_err("reg rw\n");
 			ret_status = HALMAC_RET_PLATFORM_API_INCORRECT;
 		} else {
 			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
@@ -3745,8 +3592,7 @@ halmac_verify_send_rsvd_page_88xx(struct halmac_adapter *halmac_adapter)
 	rsvd_buf = kzalloc(h2c_pkt_verify_size, GFP_KERNEL);
 
 	if (!rsvd_buf) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"[ERR]rsvd buffer malloc fail!!\n");
+		pr_err("[ERR]rsvd buffer malloc fail!!\n");
 		return HALMAC_RET_MALLOC_FAIL;
 	}
 
@@ -3765,8 +3611,7 @@ halmac_verify_send_rsvd_page_88xx(struct halmac_adapter *halmac_adapter)
 			    GFP_KERNEL);
 
 	if (!rsvd_page) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"[ERR]rsvd page malloc fail!!\n");
+		pr_err("[ERR]rsvd page malloc fail!!\n");
 		kfree(rsvd_buf);
 		return HALMAC_RET_MALLOC_FAIL;
 	}
@@ -3791,9 +3636,7 @@ halmac_verify_send_rsvd_page_88xx(struct halmac_adapter *halmac_adapter)
 		if (*(rsvd_buf + i) !=
 		    *(rsvd_page +
 		      (i + halmac_adapter->hw_config_info.txdesc_size))) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
-					DBG_EMERG,
-					"[ERR]Compare RSVD page Fail\n");
+			pr_err("[ERR]Compare RSVD page Fail\n");
 			ret_status = HALMAC_RET_PLATFORM_API_INCORRECT;
 		}
 	}
@@ -3931,14 +3774,12 @@ halmac_set_usb_mode_88xx(struct halmac_adapter *halmac_adapter,
 	usb_temp = HALMAC_REG_READ_32(halmac_adapter, REG_PAD_CTRL2);
 	if (!BIT_GET_USB23_SW_MODE_V1(usb_temp) &&
 	    !(usb_temp & BIT_USB3_USB2_TRANSITION)) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"HALMAC_HW_USB_MODE usb mode HW unsupport\n");
+		pr_err("HALMAC_HW_USB_MODE usb mode HW unsupport\n");
 		return HALMAC_RET_USB2_3_SWITCH_UNSUPPORT;
 	}
 
 	if (usb_mode == current_usb_mode) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_H2C, DBG_EMERG,
-				"HALMAC_HW_USB_MODE usb mode unchange\n");
+		pr_err("HALMAC_HW_USB_MODE usb mode unchange\n");
 		return HALMAC_RET_USB_MODE_UNCHANGE;
 	}
 
@@ -4140,9 +3981,7 @@ halmac_rqpn_parser_88xx(struct halmac_adapter *halmac_adapter,
 	}
 
 	if (search_flag == 0) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-			"HALMAC_RET_TRX_MODE_NOT_SUPPORT 1 switch case not support\n");
+		pr_err("HALMAC_RET_TRX_MODE_NOT_SUPPORT 1 switch case not support\n");
 		return HALMAC_RET_TRX_MODE_NOT_SUPPORT;
 	}
 
@@ -4184,9 +4023,7 @@ halmac_pg_num_parser_88xx(struct halmac_adapter *halmac_adapter,
 	}
 
 	if (search_flag == 0) {
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-			"HALMAC_RET_TRX_MODE_NOT_SUPPORT 1 switch case not support\n");
+		pr_err("HALMAC_RET_TRX_MODE_NOT_SUPPORT 1 switch case not support\n");
 		return HALMAC_RET_TRX_MODE_NOT_SUPPORT;
 	}
 
@@ -4268,9 +4105,7 @@ halmac_parse_intf_phy_88xx(struct halmac_adapter *halmac_adapter,
 							  HAL_INTF_PHY_USB2);
 
 			if (result != HALMAC_RET_SUCCESS)
-				HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_USB,
-						DBG_EMERG,
-						"[ERR]Write USB2PHY fail!\n");
+				pr_err("[ERR]Write USB2PHY fail!\n");
 
 		} else if (intf_phy == HAL_INTF_PHY_USB3) {
 			result = halmac_usbphy_write_88xx(halmac_adapter,
@@ -4278,9 +4113,7 @@ halmac_parse_intf_phy_88xx(struct halmac_adapter *halmac_adapter,
 							  HAL_INTF_PHY_USB3);
 
 			if (result != HALMAC_RET_SUCCESS)
-				HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_USB,
-						DBG_EMERG,
-						"[ERR]Write USB3PHY fail!\n");
+				pr_err("[ERR]Write USB3PHY fail!\n");
 
 		} else if (intf_phy == HAL_INTF_PHY_PCIE_GEN1) {
 			if (ip_sel == HALMAC_IP_SEL_INTF_PHY)
@@ -4292,9 +4125,7 @@ halmac_parse_intf_phy_88xx(struct halmac_adapter *halmac_adapter,
 					halmac_adapter, offset, (u8)value);
 
 			if (result != HALMAC_RET_SUCCESS)
-				HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_MDIO,
-						DBG_EMERG,
-						"[ERR]MDIO write GEN1 fail!\n");
+				pr_err("[ERR]MDIO write GEN1 fail!\n");
 
 		} else if (intf_phy == HAL_INTF_PHY_PCIE_GEN2) {
 			if (ip_sel == HALMAC_IP_SEL_INTF_PHY)
@@ -4306,13 +4137,9 @@ halmac_parse_intf_phy_88xx(struct halmac_adapter *halmac_adapter,
 					halmac_adapter, offset, (u8)value);
 
 			if (result != HALMAC_RET_SUCCESS)
-				HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_MDIO,
-						DBG_EMERG,
-						"[ERR]MDIO write GEN2 fail!\n");
+				pr_err("[ERR]MDIO write GEN2 fail!\n");
 		} else {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_COMMON,
-					DBG_EMERG,
-					"[ERR]Parse intf phy cfg error!\n");
+			pr_err("[ERR]Parse intf phy cfg error!\n");
 		}
 	}
 
@@ -4352,8 +4179,7 @@ halmac_dbi_write32_88xx(struct halmac_adapter *halmac_adapter, u16 addr,
 	}
 
 	if (tmp_u1b) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_DBI, DBG_EMERG,
-				"DBI write fail!\n");
+		pr_err("DBI write fail!\n");
 		return HALMAC_RET_FAIL;
 	} else {
 		return HALMAC_RET_SUCCESS;
@@ -4387,8 +4213,7 @@ u32 halmac_dbi_read32_88xx(struct halmac_adapter *halmac_adapter, u16 addr)
 
 	if (tmp_u1b) {
 		ret = 0xFFFF;
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_DBI, DBG_EMERG,
-				"DBI read fail!\n");
+		pr_err("DBI read fail!\n");
 	} else {
 		ret = HALMAC_REG_READ_32(halmac_adapter, REG_DBI_RDATA_V1);
 		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_DBI, DBG_DMESG,
@@ -4433,8 +4258,7 @@ halmac_dbi_write8_88xx(struct halmac_adapter *halmac_adapter, u16 addr, u8 data)
 	}
 
 	if (tmp_u1b) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_DBI, DBG_EMERG,
-				"DBI write fail!\n");
+		pr_err("DBI write fail!\n");
 		return HALMAC_RET_FAIL;
 	} else {
 		return HALMAC_RET_SUCCESS;
@@ -4468,8 +4292,7 @@ u8 halmac_dbi_read8_88xx(struct halmac_adapter *halmac_adapter, u16 addr)
 
 	if (tmp_u1b) {
 		ret = 0xFF;
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_DBI, DBG_EMERG,
-				"DBI read fail!\n");
+		pr_err("DBI read fail!\n");
 	} else {
 		ret = HALMAC_REG_READ_8(halmac_adapter,
 					REG_DBI_RDATA_V1 + (addr & (4 - 1)));
@@ -4527,8 +4350,7 @@ halmac_mdio_write_88xx(struct halmac_adapter *halmac_adapter, u8 addr, u16 data,
 					   0x03);
 		}
 	} else {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_MDIO, DBG_EMERG,
-				"Error Speed !\n");
+		pr_err("Error Speed !\n");
 	}
 
 	HALMAC_REG_WRITE_8(halmac_adapter, REG_PCIE_MIX_CFG,
@@ -4547,8 +4369,7 @@ halmac_mdio_write_88xx(struct halmac_adapter *halmac_adapter, u8 addr, u16 data,
 	}
 
 	if (tmp_u1b) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_MDIO, DBG_EMERG,
-				"MDIO write fail!\n");
+		pr_err("MDIO write fail!\n");
 		return HALMAC_RET_FAIL;
 	} else {
 		return HALMAC_RET_SUCCESS;
@@ -4602,8 +4423,7 @@ u16 halmac_mdio_read_88xx(struct halmac_adapter *halmac_adapter, u8 addr,
 					   0x03);
 		}
 	} else {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_MDIO, DBG_EMERG,
-				"Error Speed !\n");
+		pr_err("Error Speed !\n");
 	}
 
 	HALMAC_REG_WRITE_8(halmac_adapter, REG_PCIE_MIX_CFG,
@@ -4623,8 +4443,7 @@ u16 halmac_mdio_read_88xx(struct halmac_adapter *halmac_adapter, u8 addr,
 
 	if (tmp_u1b) {
 		ret = 0xFFFF;
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_MDIO, DBG_EMERG,
-				"MDIO read fail!\n");
+		pr_err("MDIO read fail!\n");
 
 	} else {
 		ret = HALMAC_REG_READ_16(halmac_adapter, REG_MDIO_V1 + 2);
@@ -4654,8 +4473,7 @@ halmac_usbphy_write_88xx(struct halmac_adapter *halmac_adapter, u8 addr,
 		HALMAC_REG_WRITE_8(halmac_adapter, 0xfe40, addr);
 		HALMAC_REG_WRITE_8(halmac_adapter, 0xfe42, 0x81);
 	} else {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_USB, DBG_EMERG,
-				"[ERR]Error USB Speed !\n");
+		pr_err("[ERR]Error USB Speed !\n");
 		return HALMAC_RET_NOT_SUPPORT;
 	}
 
@@ -4683,14 +4501,11 @@ u16 halmac_usbphy_read_88xx(struct halmac_adapter *halmac_adapter, u8 addr,
 			HALMAC_REG_WRITE_8(halmac_adapter, 0xfe42, 0x81);
 			value = HALMAC_REG_READ_8(halmac_adapter, 0xfe43);
 		} else {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_USB,
-					DBG_EMERG,
-					"[ERR]Error USB2PHY offset!\n");
+			pr_err("[ERR]Error USB2PHY offset!\n");
 			return HALMAC_RET_NOT_SUPPORT;
 		}
 	} else {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_USB, DBG_EMERG,
-				"[ERR]Error USB Speed !\n");
+		pr_err("[ERR]Error USB Speed !\n");
 		return HALMAC_RET_NOT_SUPPORT;
 	}
 

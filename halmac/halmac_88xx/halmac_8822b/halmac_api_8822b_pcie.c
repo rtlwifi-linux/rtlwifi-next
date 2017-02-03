@@ -81,9 +81,7 @@ halmac_mac_power_switch_8822b_pcie(struct halmac_adapter *halmac_adapter,
 			    HALMAC_PWR_FAB_TSMC_MSK, interface_mask,
 			    halmac_8822b_card_disable_flow) !=
 		    HALMAC_RET_SUCCESS) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_PWR,
-					DBG_EMERG,
-					"Handle power off cmd error\n");
+			pr_err("Handle power off cmd error\n");
 			return HALMAC_RET_POWER_OFF_FAIL;
 		}
 
@@ -98,9 +96,7 @@ halmac_mac_power_switch_8822b_pcie(struct halmac_adapter *halmac_adapter,
 			    HALMAC_PWR_FAB_TSMC_MSK, interface_mask,
 			    halmac_8822b_card_enable_flow) !=
 		    HALMAC_RET_SUCCESS) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_PWR,
-					DBG_EMERG,
-					"Handle power on cmd error\n");
+			pr_err("Handle power on cmd error\n");
 			return HALMAC_RET_POWER_ON_FAIL;
 		}
 
@@ -186,9 +182,7 @@ halmac_pcie_switch_8822b(struct halmac_adapter *halmac_adapter,
 		}
 
 		if (current_link_speed != GEN1_SPEED) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_PWR,
-					DBG_EMERG,
-					"Speed change to GEN1 fail !\n");
+			pr_err("Speed change to GEN1 fail !\n");
 			return HALMAC_RET_FAIL;
 		}
 
@@ -225,15 +219,12 @@ halmac_pcie_switch_8822b(struct halmac_adapter *halmac_adapter,
 		}
 
 		if (current_link_speed != GEN2_SPEED) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_PWR,
-					DBG_EMERG,
-					"Speed change to GEN1 fail !\n");
+			pr_err("Speed change to GEN1 fail !\n");
 			return HALMAC_RET_FAIL;
 		}
 
 	} else {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_PWR, DBG_EMERG,
-				"Error Speed !\n");
+		pr_err("Error Speed !\n");
 		return HALMAC_RET_FAIL;
 	}
 

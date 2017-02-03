@@ -159,9 +159,7 @@ halmac_cfg_rx_aggregation_88xx_usb(struct halmac_adapter *halmac_adapter,
 		dma_usb_agg &= ~BIT(7);
 		break;
 	default:
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-			"halmac_cfg_rx_aggregation_88xx_usb switch case not support\n");
+		pr_err("halmac_cfg_rx_aggregation_88xx_usb switch case not support\n");
 		agg_enable &= ~BIT_RXDMA_AGG_EN;
 		break;
 	}
@@ -445,14 +443,12 @@ halmac_get_usb_bulkout_id_88xx(struct halmac_adapter *halmac_adapter,
 			"halmac_get_usb_bulkout_id_88xx ==========>\n");
 
 	if (!halmac_buf) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"halmac_buf is NULL!!\n");
+		pr_err("halmac_buf is NULL!!\n");
 		return HALMAC_RET_DATA_BUF_NULL;
 	}
 
 	if (halmac_size == 0) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"halmac_size is 0!!\n");
+		pr_err("halmac_size is 0!!\n");
 		return HALMAC_RET_DATA_SIZE_INCORRECT;
 	}
 
@@ -489,8 +485,7 @@ halmac_get_usb_bulkout_id_88xx(struct halmac_adapter *halmac_adapter,
 		dma_mapping = HALMAC_DMA_MAPPING_HIGH;
 		break;
 	default:
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"Qsel is out of range\n");
+		pr_err("Qsel is out of range\n");
 		return HALMAC_RET_QSEL_INCORRECT;
 	}
 
@@ -508,8 +503,7 @@ halmac_get_usb_bulkout_id_88xx(struct halmac_adapter *halmac_adapter,
 		*bulkout_id = 3;
 		break;
 	default:
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"DmaMapping is out of range\n");
+		pr_err("DmaMapping is out of range\n");
 		return HALMAC_RET_DMA_MAP_INCORRECT;
 	}
 

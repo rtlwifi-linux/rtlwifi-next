@@ -134,9 +134,7 @@ halmac_cfg_rx_aggregation_88xx_sdio(struct halmac_adapter *halmac_adapter,
 		agg_enable |= BIT_RXDMA_AGG_EN;
 		break;
 	default:
-		HALMAC_RT_TRACE(
-			driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-			"halmac_cfg_rx_aggregation_88xx_usb switch case not support\n");
+		pr_err("halmac_cfg_rx_aggregation_88xx_usb switch case not support\n");
 		agg_enable &= ~BIT_RXDMA_AGG_EN;
 		break;
 	}
@@ -199,9 +197,8 @@ u8 halmac_reg_read_8_sdio_88xx(struct halmac_adapter *halmac_adapter,
 							&halmac_offset);
 
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"halmac_reg_read_8_sdio_88xx error = %x\n",
-				status);
+		pr_err("halmac_reg_read_8_sdio_88xx error = %x\n",
+		       status);
 		return status;
 	}
 
@@ -243,9 +240,8 @@ halmac_reg_write_8_sdio_88xx(struct halmac_adapter *halmac_adapter,
 							&halmac_offset);
 
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"halmac_reg_write_8_sdio_88xx error = %x\n",
-				status);
+		pr_err("halmac_reg_write_8_sdio_88xx error = %x\n",
+		       status);
 		return status;
 	}
 
@@ -291,9 +287,7 @@ u16 halmac_reg_read_16_sdio_88xx(struct halmac_adapter *halmac_adapter,
 							&halmac_offset);
 
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"halmac_reg_read_16_sdio_88xx error = %x\n",
-				status);
+		pr_err("halmac_reg_read_16_sdio_88xx error = %x\n", status);
 		return status;
 	}
 
@@ -362,9 +356,7 @@ halmac_reg_write_16_sdio_88xx(struct halmac_adapter *halmac_adapter,
 							&halmac_offset);
 
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"halmac_reg_write_16_sdio_88xx error = %x\n",
-				status);
+		pr_err("halmac_reg_write_16_sdio_88xx error = %x\n", status);
 		return status;
 	}
 
@@ -425,9 +417,8 @@ u32 halmac_reg_read_32_sdio_88xx(struct halmac_adapter *halmac_adapter,
 	status = halmac_convert_to_sdio_bus_offset_88xx(halmac_adapter,
 							&halmac_offset);
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"halmac_reg_read_32_sdio_88xx error = %x\n",
-				status);
+		pr_err("halmac_reg_read_32_sdio_88xx error = %x\n",
+		       status);
 		return status;
 	}
 
@@ -500,9 +491,8 @@ halmac_reg_write_32_sdio_88xx(struct halmac_adapter *halmac_adapter,
 							&halmac_offset);
 
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"halmac_reg_write_32_sdio_88xx error = %x\n",
-				status);
+		pr_err("halmac_reg_write_32_sdio_88xx error = %x\n",
+		       status);
 		return status;
 	}
 
@@ -553,24 +543,21 @@ u8 halmac_reg_read_nbyte_sdio_88xx(struct halmac_adapter *halmac_adapter,
 	halmac_api = (struct halmac_api *)halmac_adapter->halmac_api;
 
 	if ((halmac_offset & 0xFFFF0000) == 0) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"halmac_offset error = 0x%x\n", halmac_offset);
+		pr_err("halmac_offset error = 0x%x\n", halmac_offset);
 		return HALMAC_RET_FAIL;
 	}
 
 	status = halmac_convert_to_sdio_bus_offset_88xx(halmac_adapter,
 							&halmac_offset);
 	if (status != HALMAC_RET_SUCCESS) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"halmac_reg_read_nbyte_sdio_88xx error = %x\n",
-				status);
+		pr_err("halmac_reg_read_nbyte_sdio_88xx error = %x\n",
+		       status);
 		return status;
 	}
 
 	if (halmac_adapter->halmac_state.mac_power == HALMAC_MAC_POWER_OFF) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"halmac_state error = 0x%x\n",
-				halmac_adapter->halmac_state.mac_power);
+		pr_err("halmac_state error = 0x%x\n",
+		       halmac_adapter->halmac_state.mac_power);
 		return HALMAC_RET_FAIL;
 	}
 
@@ -615,14 +602,12 @@ halmac_get_sdio_tx_addr_88xx(struct halmac_adapter *halmac_adapter,
 			"halmac_get_sdio_tx_addr_88xx ==========>\n");
 
 	if (!halmac_buf) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"halmac_buf is NULL!!\n");
+		pr_err("halmac_buf is NULL!!\n");
 		return HALMAC_RET_DATA_BUF_NULL;
 	}
 
 	if (halmac_size == 0) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"halmac_size is 0!!\n");
+		pr_err("halmac_size is 0!!\n");
 		return HALMAC_RET_DATA_SIZE_INCORRECT;
 	}
 
@@ -660,8 +645,7 @@ halmac_get_sdio_tx_addr_88xx(struct halmac_adapter *halmac_adapter,
 			halmac_adapter->halmac_ptcl_queue[HALMAC_PTCL_QUEUE_HI];
 		break;
 	default:
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"Qsel is out of range\n");
+		pr_err("Qsel is out of range\n");
 		return HALMAC_RET_QSEL_INCORRECT;
 	}
 
@@ -681,8 +665,7 @@ halmac_get_sdio_tx_addr_88xx(struct halmac_adapter *halmac_adapter,
 		*pcmd53_addr = HALMAC_SDIO_CMD_ADDR_TXFF_EXTRA;
 		break;
 	default:
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"DmaMapping is out of range\n");
+		pr_err("DmaMapping is out of range\n");
 		return HALMAC_RET_DMA_MAP_INCORRECT;
 	}
 
@@ -727,8 +710,7 @@ halmac_cfg_tx_agg_align_sdio_88xx(struct halmac_adapter *halmac_adapter,
 			"halmac_cfg_tx_agg_align_sdio_88xx ==========>\n");
 
 	if ((align_size & 0xF000) != 0) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"Align size is out of range\n");
+		pr_err("Align size is out of range\n");
 		return HALMAC_RET_FAIL;
 	}
 
@@ -739,8 +721,7 @@ halmac_cfg_tx_agg_align_sdio_88xx(struct halmac_adapter *halmac_adapter,
 		}
 	}
 	if (align_size_ok == 0) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"Align size is not 2^3 ~ 2^11\n");
+		pr_err("Align size is not 2^3 ~ 2^11\n");
 		return HALMAC_RET_FAIL;
 	}
 
@@ -864,8 +845,7 @@ halmac_tx_allowed_sdio_88xx(struct halmac_adapter *halmac_adapter,
 	case HALMAC_QUEUE_SELECT_CMD:
 		return HALMAC_RET_SUCCESS;
 	default:
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"Qsel is out of range\n");
+		pr_err("Qsel is out of range\n");
 		return HALMAC_RET_QSEL_INCORRECT;
 	}
 
@@ -887,8 +867,7 @@ halmac_tx_allowed_sdio_88xx(struct halmac_adapter *halmac_adapter,
 			&halmac_adapter->sdio_free_space.extra_queue_number;
 		break;
 	default:
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"DmaMapping is out of range\n");
+		pr_err("DmaMapping is out of range\n");
 		return HALMAC_RET_DMA_MAP_INCORRECT;
 	}
 
