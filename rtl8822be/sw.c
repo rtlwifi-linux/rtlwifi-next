@@ -317,7 +317,7 @@ static struct rtl_mod_params rtl8822be_mod_params = {
 
 static struct rtl_hal_cfg rtl8822be_hal_cfg = {
 	.bar_id = 2,
-	.write_readback = true,
+	.write_readback = false,
 	.name = "rtl8822be_pci",
 	.ops = &rtl8822be_hal_ops,
 	.mod_params = &rtl8822be_mod_params,
