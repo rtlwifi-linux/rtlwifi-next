@@ -88,9 +88,7 @@ halmac_mac_power_switch_8822b_usb(struct halmac_adapter *halmac_adapter,
 			    HALMAC_PWR_FAB_TSMC_MSK, interface_mask,
 			    halmac_8822b_card_disable_flow) !=
 		    HALMAC_RET_SUCCESS) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_PWR,
-					DBG_EMERG,
-					"Handle power off cmd error\n");
+			pr_err("Handle power off cmd error\n");
 			return HALMAC_RET_POWER_OFF_FAIL;
 		}
 
@@ -105,9 +103,7 @@ halmac_mac_power_switch_8822b_usb(struct halmac_adapter *halmac_adapter,
 			    HALMAC_PWR_FAB_TSMC_MSK, interface_mask,
 			    halmac_8822b_card_enable_flow) !=
 		    HALMAC_RET_SUCCESS) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_PWR,
-					DBG_EMERG,
-					"Handle power on cmd error\n");
+			pr_err("Handle power on cmd error\n");
 			return HALMAC_RET_POWER_ON_FAIL;
 		}
 

@@ -97,9 +97,7 @@ halmac_mac_power_switch_8822b_sdio(struct halmac_adapter *halmac_adapter,
 			    HALMAC_PWR_FAB_TSMC_MSK, interface_mask,
 			    halmac_8822b_card_disable_flow) !=
 		    HALMAC_RET_SUCCESS) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_PWR,
-					DBG_EMERG,
-					"[ERR]Handle power off cmd error\n");
+			pr_err("[ERR]Handle power off cmd error\n");
 			HALMAC_REG_WRITE_32(halmac_adapter, REG_SDIO_HIMR,
 					    imr_backup);
 			return HALMAC_RET_POWER_OFF_FAIL;
@@ -116,9 +114,7 @@ halmac_mac_power_switch_8822b_sdio(struct halmac_adapter *halmac_adapter,
 			    HALMAC_PWR_FAB_TSMC_MSK, interface_mask,
 			    halmac_8822b_card_enable_flow) !=
 		    HALMAC_RET_SUCCESS) {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_PWR,
-					DBG_EMERG,
-					"[ERR]Handle power on cmd error\n");
+			pr_err("[ERR]Handle power on cmd error\n");
 			HALMAC_REG_WRITE_32(halmac_adapter, REG_SDIO_HIMR,
 					    imr_backup);
 			return HALMAC_RET_POWER_ON_FAIL;

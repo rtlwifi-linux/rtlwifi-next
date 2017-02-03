@@ -190,9 +190,7 @@ halmac_txdma_queue_mapping_8822b(struct halmac_adapter *halmac_adapter,
 		} else if (halmac_adapter->halmac_bulkout_num == 4) {
 			curr_rqpn_sel = HALMAC_RQPN_4BULKOUT_8822B;
 		} else {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
-					DBG_EMERG,
-					"[ERR]interface not support\n");
+			pr_err("[ERR]interface not support\n");
 			return HALMAC_RET_NOT_SUPPORT;
 		}
 	} else {
@@ -262,11 +260,9 @@ halmac_priority_queue_config_8822b(struct halmac_adapter *halmac_adapter,
 			halmac_adapter->txff_allocation.tx_fifo_pg_num =
 				HALMAC_TX_FIFO_SIZE_8822B >>
 				HALMAC_TX_PAGE_SIZE_2_POWER_8822B;
-			HALMAC_RT_TRACE(
-				driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"[ERR]rx_fifo_expanding_mode = %d not support\n",
-				halmac_adapter->txff_allocation
-					.rx_fifo_expanding_mode);
+			pr_err("[ERR]rx_fifo_expanding_mode = %d not support\n",
+			       halmac_adapter->txff_allocation
+			       .rx_fifo_expanding_mode);
 		}
 	} else {
 		halmac_adapter->txff_allocation.tx_fifo_pg_num =
@@ -317,9 +313,7 @@ halmac_priority_queue_config_8822b(struct halmac_adapter *halmac_adapter,
 		} else if (halmac_adapter->halmac_bulkout_num == 4) {
 			curr_pg_num = HALMAC_PG_NUM_4BULKOUT_8822B;
 		} else {
-			HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT,
-					DBG_EMERG,
-					"[ERR]interface not support\n");
+			pr_err("[ERR]interface not support\n");
 			return HALMAC_RET_NOT_SUPPORT;
 		}
 	} else {

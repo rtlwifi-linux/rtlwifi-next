@@ -198,8 +198,7 @@ halmac_init_trx_cfg_8822b(struct halmac_adapter *halmac_adapter,
 
 	if (halmac_adapter->h2c_buff_size !=
 	    halmac_adapter->h2c_buf_free_space) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"get h2c free space error!\n");
+		pr_err("get h2c free space error!\n");
 		return HALMAC_RET_GET_H2C_SPACE_ERR;
 	}
 
@@ -332,8 +331,7 @@ halmac_init_h2c_8822b(struct halmac_adapter *halmac_adapter)
 
 	if (halmac_adapter->h2c_buff_size !=
 	    halmac_adapter->h2c_buf_free_space) {
-		HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_EMERG,
-				"get h2c free space error!\n");
+		pr_err("get h2c free space error!\n");
 		return HALMAC_RET_GET_H2C_SPACE_ERR;
 	}
 
