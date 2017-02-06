@@ -94,6 +94,8 @@ ccflags-y += -D_ieee80211_is_robust_mgmt_frame=ieee80211_is_robust_mgmt_frame
 subdir-ccflags-y += -D_ieee80211_is_robust_mgmt_frame=ieee80211_is_robust_mgmt_frame
 endif
 
+CHECKFLAGS += -D__CHECK_ENDIAN__
+
 all:
 	$(MAKE) -C $(KSRC) M=$(PWD) modules
 install: all
