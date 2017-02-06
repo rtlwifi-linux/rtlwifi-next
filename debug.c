@@ -29,7 +29,7 @@
 #include <linux/vmalloc.h>
 
 #ifdef CONFIG_RTLWIFI_DEBUG
-void _rtl_dbg_trace(struct rtl_priv *rtlpriv, int comp, int level,
+void _rtl_dbg_trace(struct rtl_priv *rtlpriv, u64 comp, int level,
 		    const char *fmt, ...)
 {
 	if (unlikely((comp & rtlpriv->cfg->mod_params->debug_mask) &&
