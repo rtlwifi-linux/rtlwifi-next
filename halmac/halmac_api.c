@@ -283,10 +283,16 @@ halmac_init_adapter(void *driver_adapter,
 					   halmac_platform_api);
 	if (status != HALMAC_RET_SUCCESS)
 		return status;
-	pr_err("HALMAC_MAJOR_VER = %x\n", HALMAC_MAJOR_VER);
-	pr_err("HALMAC_PROTOTYPE_VER = %x\n", HALMAC_PROTOTYPE_VER);
-	pr_err("HALMAC_MINOR_VER = %x\n", HALMAC_MINOR_VER);
-	pr_err("HALMAC_PATCH_VER = %x\n", HALMAC_PATCH_VER);
+	HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_DMESG,
+			HALMAC_SVN_VER "\n");
+	HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_DMESG,
+			"HALMAC_MAJOR_VER = %x\n", HALMAC_MAJOR_VER);
+	HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_DMESG,
+			"HALMAC_PROTOTYPE_VER = %x\n", HALMAC_PROTOTYPE_VER);
+	HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_DMESG,
+			"HALMAC_MINOR_VER = %x\n", HALMAC_MINOR_VER);
+	HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_DMESG,
+			"HALMAC_PATCH_VER = %x\n", HALMAC_PATCH_VER);
 
 	HALMAC_RT_TRACE(driver_adapter, HALMAC_MSG_INIT, DBG_DMESG,
 			"halmac_init_adapter_88xx ==========>\n");
