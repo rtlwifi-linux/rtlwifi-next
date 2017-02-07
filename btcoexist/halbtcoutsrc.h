@@ -140,6 +140,8 @@ struct btc_board_info {
 	u8 btdm_ant_num;	/* ant number for btdm */
 	u8 btdm_ant_pos;
 	bool bt_exist;
+
+	u8 rfe_type;
 };
 
 enum btc_dbg_opcode {
