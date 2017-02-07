@@ -31,12 +31,15 @@
 
 static struct rtl_btc_ops rtl_btc_operation = {
 	.btc_init_variables = rtl_btc_init_variables,
+	.btc_init_variables_wifi_only = rtl_btc_init_variables_wifi_only,
 	.btc_init_hal_vars = rtl_btc_init_hal_vars,
 	.btc_power_on_setting = rtl_btc_power_on_setting,
 	.btc_init_hw_config = rtl_btc_init_hw_config,
+	.btc_init_hw_config_wifi_only = rtl_btc_init_hw_config_wifi_only,
 	.btc_ips_notify = rtl_btc_ips_notify,
 	.btc_lps_notify = rtl_btc_lps_notify,
 	.btc_scan_notify = rtl_btc_scan_notify,
+	.btc_scan_notify_wifi_only = rtl_btc_scan_notify_wifi_only,
 	.btc_connect_notify = rtl_btc_connect_notify,
 	.btc_mediastatus_notify = rtl_btc_mediastatus_notify,
 	.btc_periodical = rtl_btc_periodical,
@@ -48,6 +51,7 @@ static struct rtl_btc_ops rtl_btc_operation = {
 	.btc_is_bt_disabled = rtl_btc_is_bt_disabled,
 	.btc_special_packet_notify = rtl_btc_special_packet_notify,
 	.btc_switch_band_notify = rtl_btc_switch_band_notify,
+	.btc_switch_band_notify_wifi_only = rtl_btc_switch_band_notify_wifionly,
 	.btc_display_bt_coex_info = rtl_btc_display_bt_coex_info,
 	.btc_record_pwr_mode = rtl_btc_record_pwr_mode,
 	.btc_get_lps_val = rtl_btc_get_lps_val,
@@ -96,6 +100,11 @@ void rtl_btc_power_on_setting(struct rtl_priv *rtlpriv)
 {
 }
 
+void rtl_btc_init_variables_wifi_only(struct rtl_priv *rtlpriv)
+{
+	exhalbtc_initlize_variables_wifi_only(rtlpriv);
+}
+
 void rtl_btc_init_hal_vars(struct rtl_priv *rtlpriv)
 {
 	u8 ant_num;
@@ -128,6 +137,11 @@ void rtl_btc_init_hw_config(struct rtl_priv *rtlpriv)
 	exhalbtc_init_coex_dm(&gl_bt_coexist);
 }
 
+void rtl_btc_init_hw_config_wifi_only(struct rtl_priv *rtlpriv)
+{
+	exhalbtc_init_hw_config_wifi_only(&gl_bt_coexist_wifi_only);
+}
+
 void rtl_btc_ips_notify(struct rtl_priv *rtlpriv, u8 type)
 {
 	exhalbtc_ips_notify(&gl_bt_coexist, type);
@@ -150,6 +164,14 @@ void rtl_btc_lps_notify(struct rtl_priv *rtlpriv, u8 type)
 void rtl_btc_scan_notify(struct rtl_priv *rtlpriv, u8 scantype)
 {
 	exhalbtc_scan_notify(&gl_bt_coexist, scantype);
+}
+
+void rtl_btc_scan_notify_wifi_only(struct rtl_priv *rtlpriv, u8 scantype)
+{
+	struct rtl_hal *rtlhal = rtl_hal(rtlpriv);
+	u8 is_5g = (rtlhal->current_bandtype == BAND_ON_5G);
+
+	exhalbtc_scan_notify_wifi_only(&gl_bt_coexist_wifi_only, is_5g);
 }
 
 void rtl_btc_connect_notify(struct rtl_priv *rtlpriv, u8 action)
@@ -246,6 +268,14 @@ void rtl_btc_switch_band_notify(struct rtl_priv *rtlpriv, u8 band_type,
 		exhalbtc_switch_band_notify(&gl_bt_coexist, BTC_SWITCH_TO_5G);
 		break;
 	}
+}
+
+void rtl_btc_switch_band_notify_wifionly(struct rtl_priv *rtlpriv, u8 band_type,
+					 bool scanning)
+{
+	u8 is_5g = (band_type == BAND_ON_5G);
+
+	exhalbtc_switch_band_notify_wifi_only(&gl_bt_coexist_wifi_only, is_5g);
 }
 
 struct rtl_btc_ops *rtl_btc_get_ops_pointer(void)
