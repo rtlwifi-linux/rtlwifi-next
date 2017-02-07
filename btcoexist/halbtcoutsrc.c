@@ -32,6 +32,7 @@
 struct btc_coexist gl_bt_coexist;
 
 u32 btc_dbg_type[BTC_MSG_MAX];
+struct wifi_only_cfg gl_bt_coexist_wifi_only;
 
 /***************************************************
  *		Debug related function
@@ -702,6 +703,29 @@ bool exhalbtc_initlize_variables(struct rtl_priv *adapter)
 	return true;
 }
 
+bool exhalbtc_initlize_variables_wifi_only(void *adapter)
+{
+	struct wifi_only_cfg *wifionly_cfg = &gl_bt_coexist_wifi_only;
+	struct wifi_only_haldata *wifionly_haldata =
+					&wifionly_cfg->haldata_info;
+	struct rtl_priv *rtlpriv = adapter;
+
+	memset(&gl_bt_coexist_wifi_only, 0, sizeof(gl_bt_coexist_wifi_only));
+
+	wifionly_cfg->adapter = adapter;
+
+	wifionly_cfg->chip_interface = WIFIONLY_INTF_PCI;
+
+	wifionly_haldata->customer_id = CUSTOMER_NORMAL;
+	wifionly_haldata->efuse_pg_antnum = rtl_get_hwpg_ant_num(rtlpriv);
+	wifionly_haldata->efuse_pg_antpath =
+					rtl_get_hwpg_single_ant_path(rtlpriv);
+	wifionly_haldata->rfe_type = rtl_get_hwpg_rfe_type(rtlpriv);
+	wifionly_haldata->ant_div_cfg = 0;
+
+	return true;
+}
+
 void exhalbtc_init_hw_config(struct btc_coexist *btcoexist)
 {
 	struct rtl_priv *rtlpriv = btcoexist->adapter;
@@ -714,6 +738,11 @@ void exhalbtc_init_hw_config(struct btc_coexist *btcoexist)
 
 	if (rtlhal->hw_type == HARDWARE_TYPE_RTL8723BE)
 		ex_btc8723b2ant_init_hwconfig(btcoexist);
+}
+
+void exhalbtc_init_hw_config_wifi_only(struct wifi_only_cfg *wifionly_cfg)
+{
+
 }
 
 void exhalbtc_init_coex_dm(struct btc_coexist *btcoexist)
@@ -801,6 +830,12 @@ void exhalbtc_scan_notify(struct btc_coexist *btcoexist, u8 type)
 		ex_btc8723b2ant_scan_notify(btcoexist, scan_type);
 
 	halbtc_nomal_low_power();
+}
+
+void exhalbtc_scan_notify_wifi_only(struct wifi_only_cfg *wifionly_cfg,
+				    u8 is_5g)
+{
+
 }
 
 void exhalbtc_connect_notify(struct btc_coexist *btcoexist, u8 action)
@@ -1066,4 +1101,10 @@ void exhalbtc_switch_band_notify(struct btc_coexist *btcoexist, u8 type)
 	halbtc_leave_low_power();
 
 	halbtc_nomal_low_power();
+}
+
+void exhalbtc_switch_band_notify_wifi_only(struct wifi_only_cfg *wifionly_cfg,
+					   u8 is_5g)
+{
+
 }
