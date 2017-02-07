@@ -226,7 +226,7 @@ void rtl8822be_deinit_sw_vars(struct ieee80211_hw *hw)
 /* get bt coexist status */
 bool rtl8822be_get_btc_status(void)
 {
-	return true;
+	return false;
 }
 
 static void rtl8822be_phydm_watchdog(struct ieee80211_hw *hw)
