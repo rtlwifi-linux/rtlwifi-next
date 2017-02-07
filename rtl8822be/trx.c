@@ -704,7 +704,12 @@ void rtl8822be_tx_fill_desc(struct ieee80211_hw *hw, struct ieee80211_hdr *hdr,
 		}
 
 		/* tx report */
-		rtl_get_tx_report(ptcb_desc, pdesc, hw);
+		if (ptcb_desc->use_spe_rpt) {
+			u16 sn = rtl_get_tx_report_sn(hw);
+
+			SET_TX_DESC_SPE_RPT(pdesc, 1);
+			SET_TX_DESC_SW_DEFINE(pdesc, sn);
+		}
 
 		if (rtlpriv->rtlhal.current_bandtype == BAND_ON_5G &&
 		    ptcb_desc->hw_rate < DESC_RATE6M) {
