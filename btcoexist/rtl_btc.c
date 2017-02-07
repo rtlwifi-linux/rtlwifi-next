@@ -47,12 +47,18 @@ static struct rtl_btc_ops rtl_btc_operation = {
 	.btc_is_disable_edca_turbo = rtl_btc_is_disable_edca_turbo,
 	.btc_is_bt_disabled = rtl_btc_is_bt_disabled,
 	.btc_special_packet_notify = rtl_btc_special_packet_notify,
+	.btc_display_bt_coex_info = rtl_btc_display_bt_coex_info,
 	.btc_record_pwr_mode = rtl_btc_record_pwr_mode,
 	.btc_get_lps_val = rtl_btc_get_lps_val,
 	.btc_get_rpwm_val = rtl_btc_get_rpwm_val,
 	.btc_is_bt_ctrl_lps = rtl_btc_is_bt_ctrl_lps,
 	.btc_is_bt_lps_on = rtl_btc_is_bt_lps_on,
 };
+
+void rtl_btc_display_bt_coex_info(u8 *buff, u32 size)
+{
+	buff[0] = '\0';
+}
 
 void rtl_btc_record_pwr_mode(struct rtl_priv *rtlpriv, u8 *buf, u8 len)
 {
