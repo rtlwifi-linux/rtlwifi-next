@@ -157,10 +157,6 @@ int rtl8822be_init_sw_vars(struct ieee80211_hw *hw)
 	rtlpci->irq_mask[1] = (u32)(IMR_RXFOVW | IMR_TXFOVW | 0);
 	rtlpci->irq_mask[3] = (u32)(BIT_SETH2CDOK_MASK | 0);
 
-	/* for debug level */
-	rtlpriv->dbg.global_debuglevel = rtlpriv->cfg->mod_params->debug;
-	/* for debug mask */
-	rtlpriv->dbg.global_debug_mask = rtlpriv->cfg->mod_params->debug_mask;
 	/* for LPS & IPS */
 	rtlpriv->psc.inactiveps = rtlpriv->cfg->mod_params->inactiveps;
 	rtlpriv->psc.swctrl_lps = rtlpriv->cfg->mod_params->swctrl_lps;
@@ -311,7 +307,7 @@ static struct rtl_mod_params rtl8822be_mod_params = {
 	.swctrl_lps = false,
 	.fwctrl_lps = true,
 	.msi_support = true,
-	.debug = DBG_EMERG,
+	.debug_level = DBG_EMERG,
 	.debug_mask = 0,
 };
 
@@ -435,7 +431,7 @@ MODULE_DESCRIPTION("Realtek 8822BE 802.11n PCI wireless");
 MODULE_FIRMWARE("rtlwifi/rtl8822befw.bin");
 
 module_param_named(swenc, rtl8822be_mod_params.sw_crypto, bool, 0444);
-module_param_named(debug, rtl8822be_mod_params.debug, int, 0444);
+module_param_named(debug, rtl8822be_mod_params.debug_level, int, 0444);
 module_param_named(debug_mask, rtl8822be_mod_params.debug_mask, ullong, 0444);
 module_param_named(ips, rtl8822be_mod_params.inactiveps, bool, 0444);
 module_param_named(swlps, rtl8822be_mod_params.swctrl_lps, bool, 0444);
