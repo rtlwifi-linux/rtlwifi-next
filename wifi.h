@@ -2195,6 +2195,14 @@ struct rtl_hal_ops {
 	u16 (*get_available_desc)(struct ieee80211_hw *hw, u8 q_idx);
 	void (*c2h_content_parsing)(struct ieee80211_hw *hw, u8 tag, u8 len,
 				    u8 *val);
+
+	/* ops for halmac cb */
+	bool (*halmac_cb_init_mac_register)(struct rtl_priv *rtlpriv);
+	bool (*halmac_cb_init_bb_rf_register)(struct rtl_priv *rtlpriv);
+	bool (*halmac_cb_write_data_rsvd_page)(struct rtl_priv *rtlpriv,
+					       u8 *buf, u32 size);
+	bool (*halmac_cb_write_data_h2c)(struct rtl_priv *rtlpriv, u8 *buf,
+					 u32 size);
 };
 
 struct rtl_intf_ops {
@@ -2554,6 +2562,58 @@ struct rtl_btc_ops {
 	void (*btc_display_bt_coex_info)(u8 *buff, u32 size);
 };
 
+struct rtl_halmac_ops {
+	int (*halmac_init_adapter)(struct rtl_priv *);
+	int (*halmac_deinit_adapter)(struct rtl_priv *);
+	int (*halmac_init_hal)(struct rtl_priv *);
+	int (*halmac_deinit_hal)(struct rtl_priv *);
+	int (*halmac_poweron)(struct rtl_priv *);
+	int (*halmac_poweroff)(struct rtl_priv *);
+
+	int (*halmac_phy_power_switch)(struct rtl_priv *rtlpriv, u8 enable);
+	int (*halmac_set_mac_address)(struct rtl_priv *rtlpriv, u8 hwport,
+				      u8 *addr);
+	int (*halmac_set_bssid)(struct rtl_priv *rtlpriv, u8 hwport, u8 *addr);
+
+	int (*halmac_get_logical_efuse_size)(struct rtl_priv *rtlpriv,
+					     u32 *size);
+	int (*halmac_read_logical_efuse_map)(struct rtl_priv *rtlpriv, u8 *map,
+					     u32 size);
+
+	int (*halmac_set_bandwidth)(struct rtl_priv *rtlpriv, u8 channel,
+				    u8 pri_ch_idx, u8 bw);
+
+	int (*halmac_c2h_handle)(struct rtl_priv *rtlpriv, u8 *c2h, u32 size);
+
+	int (*halmac_chk_txdesc)(struct rtl_priv *rtlpriv, u8 *txdesc,
+				 u32 size);
+};
+
+struct rtl_halmac_indicator {
+	struct completion *comp;
+	u32 wait_ms;
+
+	u8 *buffer;
+	u32 buf_size;
+	u32 ret_size;
+	u32 status;
+};
+
+struct rtl_halmac {
+	struct rtl_halmac_ops *ops; /* halmac ops (halmac.ko own this object) */
+	void *internal;	/* internal context of halmac, i.e. PHALMAC_ADAPTER */
+	struct rtl_halmac_indicator *indicator;	/* size=10 */
+
+	/* flags */
+	/*
+	 * send_general_info
+	 *	0: no need to call halmac_send_general_info()
+	 *	1: need to call halmac_send_general_info()
+	 */
+	u8 send_general_info;
+};
+
+
 struct proxim {
 	bool proxim_on;
 
@@ -2644,6 +2704,9 @@ struct rtl_priv {
 
 	/*for bt coexist use*/
 	struct bt_coexist_info btcoexist;
+
+	/* halmac for newer IC. (e.g. 8822B) */
+	struct rtl_halmac halmac;
 
 	/* separate 92ee from other ICs,
 	 * 92ee use new trx flow.
