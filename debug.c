@@ -188,8 +188,13 @@ static int _rtl_debug_get_reg_rf_x(struct seq_file *m, void *v,
 				   enum radio_path rfpath)
 {
 	struct ieee80211_hw *hw = m->private;
+	struct rtl_priv *rtlpriv = rtl_priv(hw);
+	struct rtl_hal *rtlhal = rtl_hal(rtlpriv);
 	int i, n;
 	int max = 0x40;
+
+	if (rtlhal->hw_type == HARDWARE_TYPE_RTL8822BE)
+		max = 0xff;
 
 	for (n = 0; n <= max; ) {
 		seq_printf(m, "\n%8.8x  ", n);
