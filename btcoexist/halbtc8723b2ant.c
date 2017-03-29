@@ -4139,9 +4139,18 @@ void ex_btc8723b2ant_bt_info_notify(struct btc_coexist *btcoexist,
 		coex_sta->bt_retry_cnt =
 			coex_sta->bt_info_c2h[rsp_source][2] & 0xf;
 
+		if (coex_sta->bt_retry_cnt >= 1)
+			coex_sta->pop_event_cnt++;
+
 		coex_sta->bt_rssi =
 			coex_sta->bt_info_c2h[rsp_source][3] * 2 + 10;
 
+		coex_sta->bt_info_ext = coex_sta->bt_info_c2h[rsp_source][4];
+
+		if (coex_sta->bt_info_c2h[rsp_source][2] & 0x20)
+			coex_sta->c2h_bt_remote_name_req = true;
+		else
+			coex_sta->c2h_bt_remote_name_req = false;
 
 		if (coex_sta->bt_info_c2h[rsp_source][1] == 0x49)
 			coex_sta->a2dp_bit_pool =
@@ -4149,6 +4158,19 @@ void ex_btc8723b2ant_bt_info_notify(struct btc_coexist *btcoexist,
 		else
 			coex_sta->a2dp_bit_pool = 0;
 
+		coex_sta->bt_tx_rx_mask =
+			(coex_sta->bt_info_c2h[rsp_source][2] & 0x40);
+		btcoexist->btc_set(btcoexist, BTC_SET_BL_BT_TX_RX_MASK,
+				   &coex_sta->bt_tx_rx_mask);
+		if (coex_sta->bt_tx_rx_mask) {
+			/* BT into is responded by BT FW and BT RF REG 0x3C !=
+			 * 0x01 => Need to switch BT TRx Mask
+			 */
+			RT_TRACE(rtlpriv, COMP_BT_COEXIST, DBG_LOUD,
+				"[BTCoex], Switch BT TRx Mask since BT RF REG 0x3C != 0x01\n");
+			btcoexist->btc_set_bt_reg(btcoexist, BTC_BT_REG_RF,
+						  0x3c, 0x01);
+		}
 
 		/* Here we need to resend some wifi info to BT
 		 * because BT is reset and loss of the info.
@@ -4218,6 +4240,16 @@ void ex_btc8723b2ant_bt_info_notify(struct btc_coexist *btcoexist,
 			coex_sta->sco_exist = true;
 		else
 			coex_sta->sco_exist = false;
+
+		if ((!coex_sta->hid_exist) &&
+		    (!coex_sta->c2h_bt_inquiry_page) &&
+		    (!coex_sta->sco_exist)) {
+			if (coex_sta->high_priority_tx +
+				    coex_sta->high_priority_rx >= 160) {
+				coex_sta->hid_exist = true;
+				bt_info = bt_info | 0x28;
+			}
+		}
 	}
 
 	btc8723b2ant_update_bt_link_info(btcoexist);
