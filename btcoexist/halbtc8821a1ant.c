@@ -2390,9 +2390,17 @@ void ex_btc8821a1ant_display_coex_info(struct btc_coexist *btcoexist)
 void ex_btc8821a1ant_ips_notify(struct btc_coexist *btcoexist, u8 type)
 {
 	struct rtl_priv *rtlpriv = btcoexist->adapter;
+	bool wifi_under_5g = false;
 
 	if (btcoexist->manual_control || btcoexist->stop_coex_dm)
 		return;
+	btcoexist->btc_get(btcoexist, BTC_GET_BL_WIFI_UNDER_5G, &wifi_under_5g);
+	if (wifi_under_5g) {
+		RT_TRACE(rtlpriv, COMP_BT_COEXIST, DBG_LOUD,
+			"[BTCoex], RunCoexistMechanism(), return for 5G <===\n");
+		btc8821a1ant_coex_under_5g(btcoexist);
+		return;
+	}
 
 	if (BTC_IPS_ENTER == type) {
 		RT_TRACE(rtlpriv, COMP_BT_COEXIST, DBG_LOUD,
@@ -2436,12 +2444,20 @@ void ex_btc8821a1ant_scan_notify(struct btc_coexist *btcoexist, u8 type)
 	struct rtl_priv *rtlpriv = btcoexist->adapter;
 	bool wifi_connected = false, bt_hs_on = false;
 	bool bt_ctrl_agg_buf_size = false;
+	bool wifi_under_5g = false;
 	u32 wifi_link_status = 0;
 	u32 num_of_wifi_link = 0;
 	u8 agg_buf_size = 5;
 
 	if (btcoexist->manual_control || btcoexist->stop_coex_dm)
 		return;
+	btcoexist->btc_get(btcoexist, BTC_GET_BL_WIFI_UNDER_5G, &wifi_under_5g);
+	if (wifi_under_5g) {
+		RT_TRACE(rtlpriv, COMP_BT_COEXIST, DBG_LOUD,
+			"[BTCoex], RunCoexistMechanism(), return for 5G <===\n");
+		btc8821a1ant_coex_under_5g(btcoexist);
+		return;
+	}
 
 	if (coex_sta->bt_disabled)
 		return;
@@ -2501,11 +2517,19 @@ void ex_btc8821a1ant_connect_notify(struct btc_coexist *btcoexist, u8 type)
 	u32 wifi_link_status = 0;
 	u32 num_of_wifi_link = 0;
 	bool bt_ctrl_agg_buf_size = false;
+	bool wifi_under_5g = false;
 	u8 agg_buf_size = 5;
 
 	if (btcoexist->manual_control || btcoexist->stop_coex_dm ||
 	    coex_sta->bt_disabled)
 		return;
+	btcoexist->btc_get(btcoexist, BTC_GET_BL_WIFI_UNDER_5G, &wifi_under_5g);
+	if (wifi_under_5g) {
+		RT_TRACE(rtlpriv, COMP_BT_COEXIST, DBG_LOUD,
+			"[BTCoex], RunCoexistMechanism(), return for 5G <===\n");
+		btc8821a1ant_coex_under_5g(btcoexist);
+		return;
+	}
 
 	btcoexist->btc_get(btcoexist, BTC_GET_U4_WIFI_LINK_STATUS,
 			   &wifi_link_status);
@@ -2553,10 +2577,18 @@ void ex_btc8821a1ant_media_status_notify(struct btc_coexist *btcoexist,
 	u8 h2c_parameter[3] = {0};
 	u32 wifi_bw;
 	u8 wifi_central_chnl;
+	bool wifi_under_5g = false;
 
 	if (btcoexist->manual_control || btcoexist->stop_coex_dm ||
 	    coex_sta->bt_disabled)
 		return;
+	btcoexist->btc_get(btcoexist, BTC_GET_BL_WIFI_UNDER_5G, &wifi_under_5g);
+	if (wifi_under_5g) {
+		RT_TRACE(rtlpriv, COMP_BT_COEXIST, DBG_LOUD,
+			"[BTCoex], RunCoexistMechanism(), return for 5G <===\n");
+		btc8821a1ant_coex_under_5g(btcoexist);
+		return;
+	}
 
 	if (BTC_MEDIA_CONNECT == type) {
 		RT_TRACE(rtlpriv, COMP_BT_COEXIST, DBG_LOUD,
@@ -2600,6 +2632,7 @@ void ex_btc8821a1ant_special_packet_notify(struct btc_coexist *btcoexist,
 	struct rtl_priv *rtlpriv = btcoexist->adapter;
 	bool bt_hs_on = false;
 	bool bt_ctrl_agg_buf_size = false;
+	bool wifi_under_5g = false;
 	u32 wifi_link_status = 0;
 	u32 num_of_wifi_link = 0;
 	u8 agg_buf_size = 5;
@@ -2607,6 +2640,14 @@ void ex_btc8821a1ant_special_packet_notify(struct btc_coexist *btcoexist,
 	if (btcoexist->manual_control || btcoexist->stop_coex_dm ||
 	    coex_sta->bt_disabled)
 		return;
+
+	btcoexist->btc_get(btcoexist, BTC_GET_BL_WIFI_UNDER_5G, &wifi_under_5g);
+	if (wifi_under_5g) {
+		RT_TRACE(rtlpriv, COMP_BT_COEXIST, DBG_LOUD,
+			"[BTCoex], RunCoexistMechanism(), return for 5G <===\n");
+		btc8821a1ant_coex_under_5g(btcoexist);
+		return;
+	}
 
 	coex_sta->special_pkt_period_cnt = 0;
 
@@ -2797,9 +2838,18 @@ void ex_btc8821a1ant_bt_info_notify(struct btc_coexist *btcoexist,
 void ex_btc8821a1ant_halt_notify(struct btc_coexist *btcoexist)
 {
 	struct rtl_priv *rtlpriv = btcoexist->adapter;
+	bool wifi_under_5g = false;
 
 	RT_TRACE(rtlpriv, COMP_BT_COEXIST, DBG_LOUD,
 		 "[BTCoex], Halt notify\n");
+	btcoexist->btc_get(btcoexist, BTC_GET_BL_WIFI_UNDER_5G, &wifi_under_5g);
+	if (wifi_under_5g) {
+		RT_TRACE(rtlpriv, COMP_BT_COEXIST, DBG_LOUD,
+			"[BTCoex], RunCoexistMechanism(), return for 5G <===\n");
+		btc8821a1ant_coex_under_5g(btcoexist);
+		return;
+	}
+
 
 	btcoexist->stop_coex_dm = true;
 
@@ -2815,6 +2865,15 @@ void ex_btc8821a1ant_halt_notify(struct btc_coexist *btcoexist)
 void ex_btc8821a1ant_pnp_notify(struct btc_coexist *btcoexist, u8 pnp_state)
 {
 	struct rtl_priv *rtlpriv = btcoexist->adapter;
+	bool wifi_under_5g = false;
+
+	btcoexist->btc_get(btcoexist, BTC_GET_BL_WIFI_UNDER_5G, &wifi_under_5g);
+	if (wifi_under_5g) {
+		RT_TRACE(rtlpriv, COMP_BT_COEXIST, DBG_LOUD,
+			"[BTCoex], RunCoexistMechanism(), return for 5G <===\n");
+		btc8821a1ant_coex_under_5g(btcoexist);
+		return;
+	}
 
 	RT_TRACE(rtlpriv, COMP_BT_COEXIST, DBG_LOUD,
 		 "[BTCoex], Pnp notify\n");
