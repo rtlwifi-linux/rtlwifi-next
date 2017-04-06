@@ -1393,6 +1393,61 @@ static void halbtc8723b1ant_power_save_state(struct btc_coexist *btcoexist,
 	}
 }
 
+#if (BT_AUTO_REPORT_ONLY_8723B_1ANT == 0)
+static void halbtc8723b1ant_action_wifi_only(struct btc_coexist *btcoexist)
+{
+	halbtc8723b1ant_coex_table_with_type(btcoexist, FORCE_EXEC, 0);
+	halbtc8723b1ant_ps_tdma(btcoexist, FORCE_EXEC, false, 8);
+	halbtc8723b1ant_set_ant_path(btcoexist, BTC_ANT_PATH_PTA, FORCE_EXEC,
+				     false, false);
+}
+
+/* check if BT is disabled */
+static void halbtc8723b1ant_monitor_bt_enable_disable(struct btc_coexist
+						      *btcoexist)
+{
+	struct rtl_priv *rtlpriv = btcoexist->adapter;
+	static u32 bt_disable_cnt = 0;
+	bool bt_active = true, bt_disabled;
+
+
+	if (coex_sta->high_priority_tx == 0 &&
+	    coex_sta->high_priority_rx == 0 && coex_sta->low_priority_tx == 0 &&
+	    coex_sta->low_priority_rx == 0)
+		bt_active = false;
+	if (coex_sta->high_priority_tx == 0xffff &&
+	    coex_sta->high_priority_rx == 0xffff &&
+	    coex_sta->low_priority_tx == 0xffff &&
+	    coex_sta->low_priority_rx == 0xffff)
+		bt_active = false;
+	if (bt_active) {
+		bt_disable_cnt = 0;
+		bt_disabled = false;
+	} else {
+		bt_disable_cnt++;
+		if (bt_disable_cnt >= 2)
+			bt_disabled = true;
+	}
+	if (coex_sta->bt_disabled != bt_disabled) {
+		RT_TRACE(rtlpriv, COMP_BT_COEXIST, DBG_LOUD,
+			    "[BTCoex], BT is from %s to %s!!\n",
+			    (coex_sta->bt_disabled ? "disabled" : "enabled"),
+			    (bt_disabled ? "disabled" : "enabled"));
+
+		coex_sta->bt_disabled = bt_disabled;
+		btcoexist->btc_set(btcoexist, BTC_SET_BL_BT_DISABLE,
+				   &bt_disabled);
+		if (bt_disabled) {
+			halbtc8723b1ant_action_wifi_only(btcoexist);
+			btcoexist->btc_set(btcoexist, BTC_SET_ACT_LEAVE_LPS,
+					   NULL);
+			btcoexist->btc_set(btcoexist, BTC_SET_ACT_NORMAL_LPS,
+					   NULL);
+		}
+	}
+}
+#endif
+
 /*****************************************************
  *
  *	Non-Software Coex Mechanism start
@@ -2056,7 +2111,7 @@ void ex_halbtc8723b1ant_display_coex_info(struct btc_coexist *btcoexist)
 
 	RT_TRACE(rtlpriv, COMP_INIT, DBG_DMESG, "\r\n %-35s = [%s/ %d/ %d] ",
 		 "BT [status/ rssi/ retryCnt]",
-		 ((btcoexist->bt_info.bt_disabled) ? ("disabled") :
+		 ((coex_sta->bt_disabled) ? ("disabled") :
 		  ((coex_sta->c2h_bt_inquiry_page) ? ("inquiry/page scan") :
 		   ((BT_8723B_1ANT_BT_STATUS_NON_CONNECTED_IDLE ==
 		     coex_dm->bt_status) ?
@@ -2343,7 +2398,7 @@ void ex_halbtc8723b1ant_connect_notify(struct btc_coexist *btcoexist, u8 type)
 	u8 agg_buf_size = 5;
 
 	if (btcoexist->manual_control || btcoexist->stop_coex_dm ||
-	    btcoexist->bt_info.bt_disabled)
+	    coex_sta->bt_disabled)
 		return;
 
 	btcoexist->btc_get(btcoexist, BTC_GET_U4_WIFI_LINK_STATUS,
@@ -2393,7 +2448,7 @@ void ex_halbtc8723b1ant_media_status_notify(struct btc_coexist *btcoexist,
 	u8 wifi_central_chnl;
 
 	if (btcoexist->manual_control || btcoexist->stop_coex_dm ||
-	    btcoexist->bt_info.bt_disabled)
+	    coex_sta->bt_disabled)
 		return;
 
 	if (BTC_MEDIA_CONNECT == type)
@@ -2440,7 +2495,7 @@ void ex_halbtc8723b1ant_special_packet_notify(struct btc_coexist *btcoexist,
 	u8 agg_buf_size = 5;
 
 	if (btcoexist->manual_control || btcoexist->stop_coex_dm ||
-	    btcoexist->bt_info.bt_disabled)
+	    coex_sta->bt_disabled)
 		return;
 
 	btcoexist->btc_get(btcoexist, BTC_GET_U4_WIFI_LINK_STATUS,
