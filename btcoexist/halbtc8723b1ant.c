@@ -1372,6 +1372,7 @@ static void halbtc8723b1ant_power_save_state(struct btc_coexist *btcoexist,
 		btcoexist->btc_set(btcoexist, BTC_SET_ACT_DISABLE_LOW_POWER,
 				   &low_pwr_disable);
 		btcoexist->btc_set(btcoexist, BTC_SET_ACT_NORMAL_LPS, NULL);
+		coex_sta->force_lps_on = false;
 		break;
 	case BTC_PS_LPS_ON:
 		halbtc8723b1ant_ps_tdma_chk_pwr_save(btcoexist, true);
@@ -1383,10 +1384,12 @@ static void halbtc8723b1ant_power_save_state(struct btc_coexist *btcoexist,
 				   &low_pwr_disable);
 		/* power save must executed before psTdma */
 		btcoexist->btc_set(btcoexist, BTC_SET_ACT_ENTER_LPS, NULL);
+		coex_sta->force_lps_on = true;
 		break;
 	case BTC_PS_LPS_OFF:
 		halbtc8723b1ant_ps_tdma_chk_pwr_save(btcoexist, false);
 		btcoexist->btc_set(btcoexist, BTC_SET_ACT_LEAVE_LPS, NULL);
+		coex_sta->force_lps_on = false;
 		break;
 	default:
 		break;
